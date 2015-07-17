@@ -60,6 +60,9 @@ public class AccountController {
         mav.addObject("adminAdvanceAmount", AdminFlowTypeEnum.ADMIN_ADVANCE_AMOUNT);
         mav.addObject("receiveFine", AdminFlowTypeEnum.RECEIVE_FINE);
         mav.addObject("receiveAfterAdvance", AdminFlowTypeEnum.RECEIVE_AFTER_ADVANCE);
+
+        //test merge
+
         return mav;
     }
 }
