@@ -32,6 +32,9 @@ public class AccountController {
                              @RequestParam(value = "end_date", required = false)String endDate,
                              @RequestParam(value = "type", defaultValue = "-1")Integer type,
                              @RequestParam(value = "page", defaultValue = "1")Integer page) {
+
+        //test merge
+
         ModelAndView mav = new ModelAndView();
         AccountFlowQuery query = new AccountFlowQuery();
         query.setCurrentPage(page);
