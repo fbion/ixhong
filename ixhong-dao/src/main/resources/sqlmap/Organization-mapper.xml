@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrganizationMapper">
+    <resultMap type="OrganizationDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="email" property="email"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="code" property="code"/>
+        <result column="level" property="level"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="audit_note" property="auditNote"/>
+        <result column="check_type" property="checkType"/>
+    </resultMap>
+
+    <resultMap type="OrganizationDO" id="joinMap">
+        <id column="id" property="id"/>
+        <result column="email" property="email"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="level" property="level"/>
+        <result column="bail_percentage" property="bailPercentage"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="audit_note" property="auditNote"/>
+    </resultMap>
+
+    <sql id="all">
+		id,name,`password`,`status`,email,code,created,modified,audit_note,check_type,`level`
+	</sql>
+
+    <select id="validate" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization where email = #{email} and password = MD5(#{password})  limit 1
+    </select>
+
+    <insert id="insert" parameterType="OrganizationDO">
+        insert into xhd_organization(email,password,name,`status`,created,modified)
+        values(#{email},MD5(#{password}),#{name},#{status},NOW(),NOW())
+    </insert>
+
+    <update id="updatePassword">
+        update xhd_organization
+        set modified = NOW(),
+        password = MD5(#{password})
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update xhd_organization
+        set modified = NOW(),
+        `status` = #{status}
+        where id = #{id}
+    </update>
+
+    <select id="getByEmail" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization where email = #{value} limit 1
+    </select>
+    
+    <select id="getByName" resultMap="defaultMap">
+        select <include refid="all"/>  from  xhd_organization where name = #{value} limit 1
+    </select>
+
+    <select id="getById" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization where id=#{value} limit 1
+    </select>
+
+    <delete id="deleteByEmail">
+        delete from xhd_organization where `status`=#{status} and email=#{email}
+    </delete>
+
+    <update id="update" parameterType="OrganizationDO">
+        update xhd_organization set
+        <if test="code != null">
+        code = #{code},
+        </if>
+        <if test="auditNote != null">
+        audit_note = #{auditNote},
+        </if>
+        <if test="checkType != null">
+        check_type = #{checkType},
+        </if>
+        <if test="level != null">
+            level = #{level},
+        </if>
+        <if test="status != null">
+            `status` = #{status},
+        </if>
+        modified = NOW()
+        where id = #{id}
+    </update>
+
+    <sql id="query">
+        <if test="name != null">
+            and o.name like BINARY concat('%', #{name},'%')
+        </if>
+        <if test="code != null">
+            and o.code = #{code}
+        </if>
+        <if test="email != null">
+            and o.email = #{email}
+        </if>
+        <if test="status != -1">
+            and o.`status` = #{status}
+        </if>
+    </sql>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_organization o where o.`status` > 0
+        <include refid="query"/>
+    </select>
+
+    <select id="query" resultMap="joinMap">
+        select o.id as id,
+        o.name as name,
+        o.email as email,
+        o.status as `status`,
+        o.code as code,
+        o.created as created,
+        o.level as `level`,
+        a.bail_percentage as bail_percentage
+        from xhd_organization o
+        left join xhd_organization_account a on o.id = a.organization_id
+        where o.status > 0
+        <include refid="query"/>
+        order by o.`status`, o.created desc limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="getByCode" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization where code = #{value} and `status` = 30
+    </select>
+
+</mapper>

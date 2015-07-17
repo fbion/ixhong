@@ -1,0 +1,55 @@
+#set($title = "友情链接")
+
+<div class="content">
+    <div style="1009px;">
+        <div class="titles">
+            <p>平台管理 > <span>友情链接</span></p>
+        </div>
+    </div>
+    <div class="agree">
+        <input type="button" style="cursor: pointer;" class="nobut" id="nobut" value="添加链接" onclick="javascript:window.location.href='/links/add.jhtml'" />
+    </div>
+    <br/>
+    <table class="table1">
+        <tr class="headline">
+            <td>编号</td>
+            <td>名称</td>
+            <td>链接</td>
+            <td>时间</td>
+            <td>操作</td>
+        </tr>
+        #foreach($link in $!links)
+            <tr>
+                <td>$!link.id</td>
+                <td>$!link.name</td>
+                <td>$!link.link</td>
+                <td>$!link.modified</td>
+                <td>
+                    <a href="/links/add.jhtml?id=$!{link.id}" style="text-decoration: underline">编辑</a>
+                    <a href="#" onclick="deleteLink($!{link.id})" style="text-decoration: underline">删除</a>
+                </td>
+            </tr>
+        #end
+    </table>
+</div>
+<script type="text/javascript">
+    function deleteLink(id){
+        var flag = confirm("确定要删除？");
+        if (!flag){return false;}
+        $.ajax({
+            type:'POST',
+            url:"/links/delete.jhtml?id=" + id,
+            dataType:'json',
+            success:function(data) {
+                if (data.code == 'S00000') {
+                    window.location.href="/links/list.jhtml";
+                } else {
+                    alert(data.message);
+                }
+            },
+            error:function(data) {
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>

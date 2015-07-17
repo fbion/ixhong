@@ -1,0 +1,141 @@
+<script type="text/javascript" src="/js/umeditor1_2_2/third-party/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/umeditor1_2_2/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/umeditor1_2_2/umeditor.js"></script>
+<script type="text/javascript" src="/js/umeditor1_2_2/lang/zh-cn/zh-cn.js"></script>
+
+<style type="text/css">
+    body, textarea, input, button, select, keygen, legend {
+        font: 12px/1.14 arial,Microsoft YaHei;
+        color: #333;
+        outline: 0;
+    }
+    .container {margin-bottom:40px; }
+    .notice_main{border-bottom:1px solid #ddd;padding-bottom:20px;width:1030px;margin:0 auto;}
+    .notice_main p{text-align:center;color:#ccc;}
+    .notice_main h2{font-size: 24px;overflow: hidden;text-align:center;}
+    .wraper {width:1100px; margin:0 auto; overflow:hidden; }
+    .wraper_border{border:1px solid #ddd;}
+    .notice_main{border-bottom:1px solid #ddd;padding-bottom:30px;width:1030px;margin:0 auto;}
+    .wraper_border{border:1px solid #ddd;}
+    .notice_p{width:950px;margin:0 auto;}
+    .notice_p p{margin:20px 0px;font:14px "Microsoft YaHei";;text-indent:30px;color:#666;}
+</style>
+
+<style type="text/css">
+    .table2 td:first-child {
+        width: 10px;
+    }
+    .content {
+        padding: 1px;
+    }
+
+    .table2 {
+         margin: 2px auto;
+    }
+</style>
+
+<div class="">
+<div class="titles" style="text-align:left;padding-left:50px;">
+    <p>平台管理><span style="color:#7be2cb;">最新公告>添加最新公告></span></p>
+</div>
+<div class="course" style="width:1020px;margin-left:10px;">
+    <form id="noticeForm" action="/article/add_action.jhtml" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="content" id="content" >
+        <input type="hidden" name="type" id="type" value="$!type">
+        <input type="hidden" name="token" value="$token"/>
+        <table class="table2" style="float:left;">
+            <tr>
+                <td>标题</td>
+                <td >
+                    <input type="text" name="title" id="title"  style="margin-right: 60px; width: 800px;">
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+            <tr>
+                <td>摘要</td>
+                <td >
+                    <textarea name="summary" id="summary" style="width: 800px;height: 100px"></textarea>
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</div>
+<!--style给定宽度可以影响编辑器的最终宽度-->
+<script type="text/plain" id="myEditor" style="width:1020px;height:240px;">
+</script>
+
+<input type="submit" name="media_firm" id="media_firm" value="确认添加" style="background: #1abc9c;display: block;padding: 9px 50px;color: #fff;margin: 20px auto;"/>
+##<input type="button" onclick="showDiv()" name="media_firm" id="media_firm" value="预览" style="background: #1abc9c;display: block;padding: 9px 50px;color: #fff;margin: 20px auto;"/>
+<br/>
+
+<div class="container" id="container" style="display: none;position:absolute;top:40px;left:40px;z-index:9999;background-color:#fff">
+    <div class="wraper wraper_border">
+        <div class="notice_main">
+            <h2 class=""></h2>
+            <p>天山风光，千里冰封，万里雪飘。<br />
+                望冰窟内外，剑影闪耀。<br />
+                游龙问世，万剑臣服；<br />
+                青干一出，电光萧萧；<br />
+                莫问前世有愧，但求今生无悔；<br />
+                竞星在手，醉酒啸；<br />
+                瞧天瀑剑芒，灵光萦绕；<br />
+                天池边，舞日月双剑，览乾坤精妙；<br />
+                舍神如此威力，电光石火亦飞扬。<br />
+                江湖恩怨情仇，引七把名剑尽出鞘。<br />
+                虽说乱世腥风血雨，更有佳人伴君飘。<br />
+                俱往矣，风流剑客，数七剑逍遥。
+            </p>
+        </div>
+        <div class="notice_p">
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    //实例化编辑器
+    var um = UM.getEditor('myEditor');
+    um.focus();
+    um.execCommand('forecolor','#000');
+    um.addListener('blur',function(){
+        $('#focush2').html('编辑器失去焦点了')
+    });
+    um.addListener('focus',function(){
+        $('#focush2').html('')
+    });
+    //按钮的操作
+
+    $("#media_firm").click(function(){
+        var title = $("#title").val();
+        var content = UM.getEditor('myEditor').getContent();
+        var summary = $("#summary").val();
+        if(title == '' || title == null ){
+            alert("请输入标题");
+            return false;
+        }
+        if(title.length >= 128){
+            alert("标题长度太长,请重新输入");
+            return false;
+        }
+        if(content == '' || content == null ){
+            alert("请输入内容");
+            return false;
+        }
+        if(summary.length >=256){
+            alert("摘要内容太长,请重新输入");
+            return false;
+        }
+        $("#content").val(content);
+        $("#noticeForm").submit();
+    })
+
+    function showDiv(){
+        alert("laobo");
+        $("#container").show();
+    }
+
+
+</script>

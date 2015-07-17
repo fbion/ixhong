@@ -1,0 +1,85 @@
+#set($title = "借款审核")
+<div class="content">
+    <div class="titles" style="margin-top:-28px;">
+        <p>借款审核 ><span>发标审核</span></p>
+    </div>
+    <div class="querybox" style="width:100%;height: 90px;">
+        <form name="searchForm" action="/student/list_bidding.jhtml" method="post">
+            <div class="sel" style="margin-left: 150px;">
+                <select name="status" class="homeselect">
+                    <option value="-1" #if($query.queryStatus == -1) selected="selected" #end>全部审核状态</option>
+                    #foreach($status in $!statusEnums)
+                        <option value="$status.code" #if($status.code == $query.queryStatus) selected="selected" #end>$status.meaning</option>
+                    #end
+                </select>
+            </div>
+            <div style="margin-right:180px;">
+                <label>提交时间</label>
+                <input type="text" class="lay_date" name="begin_date" id="begin_date" readonly="readonly" style="margin-right: 10px;" value='$!query.queryBeginDate'
+                       onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){  }});" />
+                至
+                <input type="text" class="lay_date" name="end_date" id="end_date" readonly="readonly " style="margin-left: 10px;" value='$!query.queryEndDate'
+                       onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){  }});" />
+            </div>
+            <br/>
+            <label>借款人姓名</label>
+            <input type="text" class="classname" id="student_name" name="student_name" value="$!query.studentName" />
+            <label>借款人手机号</label>
+            <input type="text" class="classname" id="student_phone" name="student_phone" value="$!query.studentPhone" />
+            <label>机构名称</label>
+            <input type="text" class="jgname" id="organization_name" name="organization_name" value="$!query.organizationName" />
+            <input type="submit" style="cursor: pointer;" class="jgbut" id="jgbut" value="搜索" />
+        </form>
+    </div>
+    <table class="table1" width="100%" style="margin-top: 20px;">
+        <tr class="headline">
+            <td>借款人姓名</td>
+            <td>手机号</td>
+            <td>机构名称</td>
+            <td>课程名称</td>
+            <td>借款金额（元）</td>
+            <td>借款期限（月）</td>
+            <td>宽恕期（月）</td>
+            <td>审核状态</td>
+            <td>提交时间</td>
+            <td>操作</td>
+        </tr>
+        #foreach( $bidding in $!biddings )
+            <tr>
+                <td>$!bidding.studentName</td>
+                <td>$!bidding.studentPhone</td>
+                <td>$!bidding.organizationName</td>
+                <td>$!bidding.courseName</td>
+                <td>$!bidding.required</td>
+                <td>$!bidding.monthLimit</td>
+                <td>$!bidding.gracePeriod</td>
+                <td>
+                    #foreach($status in $!statusEnums)
+                        #if($!status.code == $!bidding.status)
+                        $!status.meaning
+                    #end
+                    #end
+                </td>
+                <td>
+                    $!dateFormatUtils.format($!bidding.created,'yyyy-MM-dd')
+                </td>
+                <td>
+                    #if($!bidding.status == $!{biddingAdminChecking})
+                        <a href="/student/audit_bidding.jhtml?id=$!bidding.id&student_id=$!bidding.studentId">审核</a>
+                    #elseif($!bidding.status == $!{biddingFullChecking})
+                        <a href="/student/download_contract.jhtml?bidding_id=$!bidding.id">查看合同</a>
+                        <a href="/student/certify.jhtml?student_id=$!bidding.studentId">身份认证</a>
+                        <a href="/student/audit_full_bidding.jhtml?id=$!bidding.id&student_id=$!bidding.studentId">审核</a>
+                    #elseif($!bidding.status == $!{biddingStaging})
+                        <a href="/student/download_contract.jhtml?bidding_id=$!bidding.id">查看合同</a>
+                        <a href="/student/detail.jhtml?id=$!bidding.id&student_id=$!bidding.studentId">查看</a>
+                    #else
+                        <a href="/student/detail.jhtml?id=$!bidding.id&student_id=$!bidding.studentId">查看</a>
+                    #end
+                </td>
+            </tr>
+        #end
+    </table>
+    #pagination("/student/list_bidding.jhtml?$!{query.queryString()}" $!queryResult)
+</div>
+

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ArticleMapper">
+    <resultMap type="ArticleDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="image" property="image"/>
+        <result column="status" property="status"/>
+        <result column="type" property="type"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,title,summary,content,image,`status`,`type`,created,modified
+    </sql>
+
+    <sql id="simple">
+        id,title,summary,image,`status`,`type`,created,modified
+    </sql>
+
+    <insert id="insert" parameterType="ArticleDO">
+        insert INTO xhd_article(title,summary,content,image,`type`,created,modified) VALUES (#{title},
+        #{summary}, #{content}, #{image}, #{type},NOW(),NOW())
+    </insert>
+
+
+    <select id="query" resultMap="defaultMap">
+        select
+        <if test="id == null">
+            <include refid="simple"/>
+        </if>
+        <if test="id != null">
+            <include refid="all"/>
+        </if>
+        from xhd_article
+        where 1 = 1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        and `type` = #{type} and status = 1
+        order by created desc, modified desc
+        limit 10;
+    </select>
+
+    <sql id="query">
+           <if test="type != null">
+               and type = #{type}
+           </if>
+        <if test="beginDate != null and endDate != null">
+            and created BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        <if test="title != null">
+            and title like binary concat('%', #{title}, '%')
+        </if>
+    </sql>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_article WHERE id = #{value} limit 1
+    </select>
+
+    <select id="list" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_article where 1 = 1
+        <include refid="query"/>
+        order by `status` desc limit #{startRow},#{pageSize}
+    </select>
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_article where 1 = 1
+        <include refid="query"/>
+    </select>
+    <update id="updateStatus" >
+        update xhd_article set `status` = #{status } where id = #{id}
+    </update>
+
+    <update id="update" parameterType="ArticleDO">
+        update xhd_article set
+        title = #{title},
+        summary = #{summary},
+        image = #{image},
+        content = #{content},
+        modified = NOW()
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from xhd_article where id = #{VALUE }
+    </delete>
+
+</mapper>

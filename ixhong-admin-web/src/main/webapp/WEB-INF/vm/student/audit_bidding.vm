@@ -1,0 +1,576 @@
+#set($title = "借款审核")
+<a name="top"></a>
+<p id="back-to-top"><a href="#top"><span></span>返回顶部</a></p>
+<div class="content">
+    <div class="titles" style="margin-top:-28px;">
+        <p>借款审核 >发标审核 ><span>$!student.name</span></p>
+    </div>
+    <div class="course" style="height: 350px;">
+        <form id="auditForm" name="auditForm" action="/student/audit_bidding_action.jhtml" method="post">
+            <input type="hidden" name="token" value="$!{token}"/>
+            <input type="hidden" name="id" value="$!{id}">
+            <table class="table2" style="margin-left: 18%;">
+                <tr>
+                    <td>审核结果</td>
+                    <td>
+                        <label><input type="radio" name="status" value="$!{ongoing}" checked="checked">审核通过</label>　
+                        <label><input type="radio" name="status" value="$!{auditedFailure}">拒绝通过</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">审核留言</td>
+                    <td>
+                        <textarea class="course_text" id="audit_note" name="audit_note"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" name="course_firm" id="course_firm" value="提交" class="course_but"/>
+                        <input type="button" name="course_quit" id="course_quit" value="取消" class="course_but" onclick="history.go(-1)"/>
+                    </td>
+                </tr>
+                #if($organizationAuditNote != "")
+                    <tr>
+                        <td>机构审核留言</td>
+                        <td>
+                            $!organizationAuditNote
+                        </td>
+                    </tr>
+                #end
+            </table>
+        </form>
+    </div>
+    <div style="border-top:2px solid #d9e2e9;background:#f5f9fc;">
+        <div class="showinformation">
+            <div class="titletop" style="text-align: center;margin-top: 50px;height: 15px;">学生资质评分:$!student.score</div>
+            <div class="informationlist">
+                <table class="table2 tb">
+                    <tr>
+                        <td>学生已签署的借款协议:</td>
+                        <td>
+                            #if($!{bidding.contractImage} != "")
+                                <a target="_blank" href="http://${imgHost}/ds/xm/$!{bidding.contractImage}">
+                                    <img src="http://${imgHost}/ds/x2/$!{bidding.contractImage}" class='' style="cursor: pointer;"/>
+                                </a>
+                            #else
+                                <img src="/images/default.jpg" />
+                            #end
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="showinformation">
+                <div class="titletop" style="text-align: center;margin-top: 50px;height: 15px;">基本信息</div>
+                <div class="informationlist">
+                    <table class="table2 tb">
+                        <tr>
+                            <td>借款人真实姓名:</td>
+                            <td>$!student.name</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">性别:</td>
+                            <td>
+                                #foreach($status in $!genderEnum)
+                            #if($status.code == $!basic.gender)
+                                    $status.meaning
+                                #end
+                        #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">出生年月:</td>
+                            <td>$!birthDate</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">身份证号:</td>
+                            <td>$!student.cardId</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">婚姻状况:</td>
+                            <td>
+                                #foreach($status in $!marryStatusEnum)
+                            #if($status.code == $!basic.marryStatus)
+                                    $status.meaning
+                                #end
+                        #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">子女个数:</td>
+                            <td>
+                                #foreach($status in $!childrenEnum)
+                            #if($status.code == $!basic.children)
+                                    $status.meaning
+                                #end
+                        #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">电子邮箱地址:</td>
+                            <td>$!basic.email</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">QQ/微信号:</td>
+                            <td>$!basic.qq</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">户籍地址类型:</td>
+                            <td>
+                                #foreach($status in $!censusAddressEnum)
+                                #if($status.code == $!basic.censusAddressType)
+                                    $status.meaning
+                                #end
+                            #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">户籍类型:</td>
+                            <td>
+                                #foreach($status in $!censusTypeEnum)
+                                #if($status.code == $!basic.censusType)
+                                    $status.meaning
+                                #end
+                            #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">居住状况:</td>
+                            <td>
+                                #foreach($status in $!houseTypeEnum)
+                                #if($status.code == $!residence.get("owner_type"))
+                                    $status.meaning
+                                #end
+                            #end
+                            </td>
+                        </tr>
+                        #if ($!residence.get("owner_type") == $rentHouseType)
+                            <tr>
+                                <td valign="top">房租:</td>
+                                <td>
+                                    $!residence.get("rent")
+                                </td>
+                            </tr>
+                        #end
+                        #if ($!residence.get("owner_type") == $otherHouseType)
+                            <tr>
+                                <td valign="top">亲属姓名:</td>
+                                <td>
+                                    $!residence.get("owner_name")
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">亲属联系方式:</td>
+                                <td>
+                                    $!residence.get("owner_phone")
+                                </td>
+                            </tr>
+                        #end
+                        <tr>
+                            <td valign="top">现住址:</td>
+                            <td>$!{studentAddressProvince}省$!{studentAddressCity}市$!basicAddress.get("detail")</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">借款人身份证正面:</td>
+                            <td>
+                                <a target="_blank" href="http://${imgHost}/ds/xm/$!{basic.cardFontImage}">
+                                    <img src="http://${imgHost}/ds/x2/$!{basic.cardFontImage}" class='' style="cursor: pointer;"/>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">借款人身份证反面:</td>
+                            <td>
+                                <a target="_blank" href="http://${imgHost}/ds/xm/$!{basic.cardBackImage}">
+                                    <img src="http://${imgHost}/ds/x2/$!{basic.cardBackImage}" class='' style="cursor: pointer;"/>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">户口本首页:</td>
+                            <td>
+                                #if($!{basic.censusIndexImage} != "")
+                                    <a target="_blank" href="http://${imgHost}/ds/xm/$!{basic.censusIndexImage}">
+                                        <img src="http://${imgHost}/ds/x2/$!{basic.censusIndexImage}" class='' style="cursor: pointer;"/>
+                                    </a>
+                                #else
+                                    <img src="/images/default.jpg" />
+                                #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">户口本本人页:</td>
+                            <td>
+                                #if($!{basic.censusSelfImage} != "")
+                                    <a target="_blank" href="http://${imgHost}/ds/xm/$!{basic.censusSelfImage}">
+                                        <img src="http://${imgHost}/ds/x2/$!{basic.censusSelfImage}" class='' style="cursor: pointer;"/>
+                                    </a>
+                                #else
+                                    <img src="/images/default.jpg" />
+                                #end
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="showinformation">
+                <div class="titletop" style="text-align: center;margin-top: 50px;height: 15px;">学历信息</div>
+                <div class="informationlist">
+                    <table class="table2 tb">
+                        <tr>
+                            <td>最高学历:</td>
+                            <td>
+                                #foreach($status in $!degreeEnum)
+                                #if($status.code == $!education.degree)
+                                    $status.meaning
+                                #end
+                            #end
+                                (保证金比例：$!{bidding.bailPercentage}%)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>学业状态:</td>
+                            <td>
+                                #foreach($status in $!graduateStatusEnum)
+                                #if($status.code == $!education.status)
+                                    $status.meaning
+                                #end
+                            #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>院校全称:</td>
+                            <td>$!education.university</td>
+                        </tr>
+                        <tr>
+                            <td>院系:</td>
+                            <td>$!education.college</td>
+                        </tr>
+                        <tr>
+                            <td>专业:</td>
+                            <td>$!education.major</td>
+                        </tr>
+                        <tr>
+                            <td>入学日期:</td>
+                            <td>$!education.beginDate</td>
+                        </tr>
+                        <tr>
+                            <td>毕业/预期毕业时间:</td>
+                            <td>$!education.endDate</td>
+                        </tr>
+                        <tr>
+                            <td>最高学历证明人:</td>
+                            <td>$!education.certifier</td>
+                        </tr>
+                        <tr>
+                            <td>最高学历证明人联系电话:</td>
+                            <td>$!education.certifierPhone</td>
+                        </tr>
+                        <tr>
+                            <td>毕业证/肄业证/学生证:</td>
+                            <td>
+                                <a target="_blank" href="http://${imgHost}/ds/xm/$!{education.certificateImage}">
+                                    <img src="http://${imgHost}/ds/x2/$!{education.certificateImage}" class='' style="cursor: pointer;" />
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="showinformation">
+                <div class="titletop" style="text-align: center;margin-top: 50px;height: 15px;">工作信息</div>
+                <div class="informationlist">
+                    <table class="table2 tb">
+                        <tr>
+                            <td>当前状态:</td>
+                            <td>
+                                #foreach($status in $!workStatusEnum)
+                                #if($status.code == $!job.status)
+                                    $status.meaning
+                                #end
+                            #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>公司名称:</td>
+                            <td>
+                                $!job.company
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>所在部门:</td>
+                            <td>$!job.department</td>
+                        </tr>
+                        <tr>
+                            <td>职务:</td>
+                            <td>$!job.title</td>
+                        </tr>
+                        <tr>
+                            <td>入职时间:</td>
+                            <td>$!job.beginDate</td>
+                        </tr>
+                        <tr>
+                            <td>工作证明人:</td>
+                            <td>$!job.certifier</td>
+                        </tr>
+                        <tr>
+                            <td>工作证明人职位:</td>
+                            <td>$!job.certifierTitle</td>
+                        </tr>
+                        <tr>
+                            <td>工作证明人联系电话:</td>
+                            <td>$!job.certifierPhone</td>
+                        </tr>
+                        <tr>
+                            <td>工牌/劳动合同/名片:</td>
+                            <td>
+                                #if($!stringUtils.isNotBlank($!{job.certificateImage}))
+                                    <a target="_blank" href="http://${imgHost}/ds/xm/$!{job.certificateImage}">
+                                        <img src="http://${imgHost}/ds/x2/$!{job.certificateImage}"  class='' style="cursor: pointer;" />
+                                    </a>
+                                #else
+                                    <img src="/images/default.jpg" />
+                                #end
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="showinformation">
+                <div class="titletop" style="text-align: center;margin-top: 50px;height: 15px;">联系人信息</div>
+                <div class="informationlist">
+                    <div class="h40"><em>第一亲属联系人</em></div>
+                    <table class="table2 tb">
+                        <tr>
+                            <td>与本人关系:</td>
+                            <td>
+                                #foreach($status in $!relativesEnum)
+                                #if($status.code == $!primaryRelatives.get("type"))
+                                    $status.meaning
+                                #end
+                            #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>是否共同借款人:</td>
+                            <td>
+                                #if($!primaryRelatives.get("guarantor") == 1)
+                                    是
+                                #else
+                                    否
+                                #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>姓名:</td>
+                            <td>$!primaryRelatives.getString("name")</td>
+                        </tr>
+                        <tr>
+                            <td>联系电话:</td>
+                            <td>$!primaryRelatives.get("phone")</td>
+                        </tr>
+                        <tr>
+                            <td>工作单位:</td>
+                            <td>$!primaryRelatives.get("company")</td>
+                        </tr>
+                        <tr>
+                            <td>联系地址:</td>
+                            <td>$!primaryRelatives.get("address")</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="informationlist">
+                    <div class="h40"><em>第二亲属联系人</em></div>
+                    <table class="table2 tb">
+                        <tr>
+                            <td>与本人关系:</td>
+                            <td>
+                                #foreach($status in $!relativesEnum)
+                                #if($status.code == $!minorRelatives.type)
+                                    $status.meaning
+                                #end
+                            #end
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>姓名:</td>
+                            <td>$!minorRelatives.name</td>
+                        </tr>
+                        <tr>
+                            <td>联系电话:</td>
+                            <td>$!minorRelatives.phone</td>
+                        </tr>
+                        <tr>
+                            <td>工作单位:</td>
+                            <td>$!minorRelatives.company</td>
+                        </tr>
+                        <tr>
+                            <td>联系地址:</td>
+                            <td>$!minorRelatives.address</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="informationlist">
+                    <div class="h40"><em>其他亲属/朋友联系人</em></div>
+                    <table class="table2 tb">
+                        <tr>
+                            <td>与本人关系:</td>
+                            <td>
+                                $!otherRelatives.get("type")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>姓名:</td>
+                            <td>$!otherRelatives.name</td>
+                        </tr>
+                        <tr>
+                            <td>联系电话:</td>
+                            <td>$!otherRelatives.phone</td>
+                        </tr>
+                        <tr>
+                            <td>联系地址:</td>
+                            <td>$!otherRelatives.address</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="showinformation">
+                <div class="titletop" style="text-align: center;margin-top: 50px;height: 15px;">借款用途</div>
+                <div class="informationlist">
+                    <table class="table2 tb">
+                        <tr>
+                            <td>培训机构代码:</td>
+                            <td>$!usage.organizationCode</td>
+                        </tr>
+                        <tr>
+                            <td>培训机构名称:</td>
+                            <td>$!usage.organizationName</td>
+                        </tr>
+                        <tr>
+                            <td>咨询老师姓名:</td>
+                            <td>$!usage.teacher</td>
+                        </tr>
+                        <tr>
+                            <td>课程名称:</td>
+                            <td>$!course.name</td>
+                        </tr>
+                        <tr>
+                            <td>课程价格:</td>
+                            <td>$!course.price</td>
+                        </tr>
+                        <tr>
+                            <td>课程周期:</td>
+                            <td>$!course.totalMonths</td>
+                        </tr>
+                        <tr>
+                            <td>已付金额:</td>
+                            <td>$!usage.paid</td>
+                        </tr>
+                        <tr>
+                            <td>借款金额:</td>
+                            <td>$!usage.required</td>
+                        </tr>
+                        <tr>
+                            <td>借款期限:</td>
+                            <td>
+                                $!{usage.monthLimit}个月
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>仅还利息期限:</td>
+                            <td>
+                                $!{usage.gracePeriod}个月
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>利率:</td>
+                            <td>$!{rate}</td>
+                        </tr>
+                        <tr>
+                            <td>仅还利息期月供:</td>
+                            <td>$!{gracePay}</td>
+                        </tr>
+                        <tr>
+                            <td>还款期月供:</td>
+                            <td>$!{monthPay}</td>
+                        </tr>
+                        <tr>
+                            <td>预计结课日期:</td>
+                            <td>$!usage.courseEndDate</td>
+                        </tr>
+                        <tr>
+                            <td>预期就业职位名称:</td>
+                            <td>$!usage.expectedTitle</td>
+                        </tr>
+                        <tr>
+                            <td>预期就业后每月薪资:</td>
+                            <td>$!usage.expectedSalary</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="fullScreen"  align="center" style="display:none;background-color: black;position: absolute;z-index:1000;top:0px;opacity: 0.4;">
+</div>
+<img id="fullScreenImg" style="top: 100px;position: fixed;display:none;z-index:1001;"/>
+<script src="/js/fullscreen.js"></script>
+<script>
+    $(function() {
+
+        $('#course_firm').click(function() {
+            if(check_audit_note("audit_note")) {
+                $.ajax({
+                    type:"POST",
+                    url:"/student/audit_bidding_action.jhtml",
+                    data:$('#auditForm').serialize(),
+                    dataType:"json",
+                    success:function(data) {
+                        if (data.code == 'S00000') {
+                            window.location.href = data.data._redirect_url;
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function(request) {
+                        alert("网络异常，请稍后再试");
+                    }
+                });
+            }
+        })
+    })
+
+    function _check_len(s) {
+        var l = 0;
+        var a = s.split("");
+        for (var i = 0; i < a.length; i++) {
+            if (a[i].charCodeAt(0) < 299) {
+                l++;
+            } else {
+                l += 2;
+            }
+        }
+        return l;
+    }
+    /**
+     * 审核留言的校验
+     * @param id
+     * @returns {boolean}
+     */
+    function check_audit_note(id) {
+        var audit_note = $('#'+id).val();
+        var len = _check_len(audit_note);
+        if (audit_note == '') {
+            alert('审核留言不能为空！');
+            return false;
+        } else if (len < 4) {
+            alert('审核留言最少输入4个字符，一个中文占2个字符！');
+            return false;
+        } else if (len > 122) {
+            alert('审核留言最多输入122个字符，一个中文占2个字符！');
+            return false;
+        }
+        return true;
+    }
+</script>

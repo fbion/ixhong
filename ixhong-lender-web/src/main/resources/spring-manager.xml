@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-autowire="byName">
+
+	<!--<bean id="solrClient" class="com.ixhong.common.solr.SolrClient" init-method="init" destroy-method="close">-->
+		<!--<property name="baseUrl" value="${ixhong.solr.url}"/>-->
+		<!--<property name="soTimeout" value="${ixhong.solr.sockettimeout}"/>-->
+		<!--<property name="connectionTimeout" value="${ixhong.solr.connectionTimeout}"/>-->
+		<!--<property name="allowCompression" value="${ixhong.solr.allowcompress}"/>-->
+		<!--<property name="followRedirects" value="${ixhong.solr.followRedirects}"/>-->
+		<!--<property name="maxTotalConnections" value="${ixhong.solr.maxconnection}"/>-->
+	<!--</bean>-->
+
+	<bean id="lenderManager" class="com.ixhong.manager.impl.LenderManagerImpl"/>
+	<bean id="biddingManager" class="com.ixhong.manager.impl.BiddingManagerImpl" />
+	<bean id="yibaoCityManager" class="com.ixhong.manager.impl.YibaoCityManagerImpl"/>
+	<bean id="bankManager" class="com.ixhong.manager.impl.BankManagerImpl"/>
+	<bean id="lenderAccountManager" class="com.ixhong.manager.impl.LenderAccountManagerImpl"/>
+	<bean id="lenderAccountFlowManager" class="com.ixhong.manager.impl.LenderAccountFlowManagerImpl"/>
+	<bean id="biddingItemManager" class="com.ixhong.manager.impl.BiddingItemManagerImpl"/>
+	<bean id="studentManager" class="com.ixhong.manager.impl.StudentManagerImpl"/>
+	<bean id="studentEducationManager" class="com.ixhong.manager.impl.StudentEducationManagerImpl"/>
+	<bean id="studentUsageManager" class="com.ixhong.manager.impl.StudentUsageManagerImpl"/>
+	<bean id="studentBillStageManager" class="com.ixhong.manager.impl.StudentBillStageManagerImpl"/>
+	<bean id="studentBasicManager" class="com.ixhong.manager.impl.StudentBasicManagerImpl"/>
+	<bean id="lenderBillStageManager" class="com.ixhong.manager.impl.LenderBillStageManagerImpl"/>
+	<bean id="accountFlowManager" class="com.ixhong.manager.impl.AccountFlowManagerImpl"/>
+	<bean id="accountManager" class="com.ixhong.manager.impl.AccountManagerImpl"/>
+	<bean id="articleManager" class="com.ixhong.manager.impl.ArticleManagerImpl"/>
+	<bean id="linksManager" class="com.ixhong.manager.impl.LinksManagerImpl"/>
+</beans>

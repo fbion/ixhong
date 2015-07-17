@@ -1,0 +1,57 @@
+#set($title = "媒体")
+<div class="content">
+    <div class="titles">
+        <p>平台管理><span>最新媒体></span><span>媒体列表</span></p>
+        </p>
+    </div>
+    <div class="querybox" style="width:100%;">
+        <form name="searchForm" action="/article/media_list.jhtml" method="post">
+            <label>标题</label>
+            <input type="text" class="classname" id="title" name="title" value="$!query.title" />
+            <input type="submit" style="cursor: pointer;" class="jgbut" id="jgbut" value="搜索" />
+        </form>
+    </div>
+    <div class="agree">
+        <input type="button" onclick="javascript:addNotice()" class="nobut" id="nobut" value="添加最新媒体" style="cursor: pointer;width:100px;" />
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td width="200px">标题</td>
+            <td width="100px">是否生效</td>
+            <td width="150px">图片</td>
+            <td width="150px">发布时间</td>
+            <td>操作</td>
+        </tr>
+        #foreach( $article in $!articles )
+            <tr>
+                <td>$!article.title</td>
+                <td>
+                    #if($!article.status == 1)
+                        有效
+                    #else
+                        无效
+                    #end
+                </td>
+                <td><img src="$!article.image" style="width: 100px;height: 100px"></td>
+                <td>
+                    $!dateFormatUtils.format($!article.created,'yyyy-MM-dd')
+                </td>
+                <td>
+                    #if($!article.status == 1)
+                        <a href="javascript:confirm('您确定要停用该文章吗？','/article/update_status_action.jhtml?status=0&id=$article.id&type=2')" >停用</a>
+                    #else
+                        <a href="javascript:confirm('您确定要启用该文章吗？','/article/update_status_action.jhtml?status=1&id=$article.id&type=2')" >启用</a>
+                    #end
+                    <a href="/article/media_detail.jhtml?id=$!article.id">编辑</a>
+                    <a href="javascript:confirm('您确定要删除该文章吗？','/article/delete_action.jhtml?id=$!article.id&type=2')">删除</a>
+                </td>
+            </tr>
+        #end
+    </table>
+    #pagination("/article/media_list.jhtml?$!{query.queryString()}" $!queryResult)
+</div>
+<script>
+    function addNotice(){
+        window.location.href="/article/add_media.jhtml";
+    }
+</script>

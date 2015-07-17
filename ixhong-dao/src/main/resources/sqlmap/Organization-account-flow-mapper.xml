@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrganizationAccountFlowMapper">
+    <resultMap type="OrganizationAccountFlowDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="balance_before" property="balanceBefore"/>
+        <result column="balance_after" property="balanceAfter"/>
+        <result column="bail_before" property="bailBefore"/>
+        <result column="bail_after" property="bailAfter"/>
+        <result column="withdraw" property="withdraw"/>
+        <result column="fee" property="fee"/>
+        <result column="frozen_before" property="frozenBefore"/>
+        <result column="frozen_after" property="frozenAfter"/>
+        <result column="status" property="status"/>
+        <result column="order_id" property="orderId"/>
+        <result column="batch_no" property="batchNo"/>
+        <result column="withdraw_id" property="withdrawId"/>
+        <result column="bidding_id" property="biddingId"/>
+        <result column="student_id" property="studentId"/>
+        <result column="student_name" property="studentName"/>
+        <result column="student_phone" property="studentPhone"/>
+        <result column="description" property="description"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,organization_id,type,amount,balance_before,balance_after,bail_before,bail_after,
+        withdraw,fee,frozen_before,frozen_after,status,order_id,batch_no,withdraw_id,bidding_id,student_id,student_name,student_phone,description,created,modified
+    </sql>
+
+    <insert id="insert" parameterType="OrganizationAccountFlowDO">
+        insert into xhd_organization_account_flow(organization_id,type,amount,balance_before,
+        balance_after,bail_before,bail_after,
+        <if test="withdraw != null">
+        withdraw,fee,frozen_before,frozen_after,status,order_id,batch_no,withdraw_id,
+        </if>
+        bidding_id,student_id,student_name,student_phone,description,
+        created,modified)values(#{organizationId},#{type},#{amount},#{balanceBefore},
+        #{balanceAfter},#{bailBefore},#{bailAfter},
+        <if test="withdraw != null">
+        #{withdraw},#{fee},#{frozenBefore},#{frozenAfter},#{status},#{orderId},#{batchNo},#{withdrawId},
+        </if>
+        #{biddingId},#{studentId},#{studentName},#{studentPhone},#{description}
+        ,NOW(),NOW())
+    </insert>
+
+    <sql id="query">
+        <if test="organizationId != null">
+            and organization_id = #{organizationId}
+        </if>
+        <if test="type != -1">
+            and type = #{type}
+        </if>
+        <if test="beginDate != null and endDate != null">
+            and `created` BETWEEN #{beginDate} AND #{endDate}
+        </if>
+    </sql>
+
+    <select id="query" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_organization_account_flow where 1 = 1
+        <include refid="query"/>
+        order by `created` DESC limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_organization_account_flow where 1=1
+        <include refid="query"/>
+    </select>
+
+    <select id="getByStatus" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_organization_account_flow
+        WHERE `status` = #{status}
+        AND type = #{type} limit 20
+    </select>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_organization_account_flow WHERE id = #{value} limit 1
+    </select>
+
+    <update id="update">
+        update xhd_organization_account_flow set `status` = #{status},modified = NOW() where id = #{id}
+    </update>
+
+    <select id="getByOrderId" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_organization_account_flow WHERE order_id = #{value} limit 1
+    </select>
+
+</mapper>

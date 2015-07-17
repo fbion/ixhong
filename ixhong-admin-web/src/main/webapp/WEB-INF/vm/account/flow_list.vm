@@ -1,0 +1,68 @@
+#set($title = "平台收支记录")
+<div class="content">
+    <div style-"width:1009px">
+    <div class="titles">
+        <p>平台管理 > <span>收支记录</span></p>
+    </div>
+    <div class="fl">
+        <span style="display:inline-block;font-size:18px;width:200px;text-align:left;padding:10px;">
+        平台资金余额 $!balance
+        </span>
+        <span style="display:inline-block;font-size:18px;width:200px;text-align:left;padding:10px;">
+            易宝总余额
+        </span>
+    </div>
+    <div class="cle"></div>
+    <div class="querybox" >
+        <form id="admin_account_flow_form" method="post" action="/account/flow_list.jhtml">
+            <div class="txt_lf">
+                <select name="type" class="">
+                    <option value="-1" >全部交易类别</option>
+                    <option value="$!receiveFee.code" #if($!receiveFee.code == $query.type) selected="selected" #end>$!receiveFee.meaning</option>
+                    <option value="$!rechargeFee.code" #if($!rechargeFee.code == $query.type) selected="selected" #end>$!rechargeFee.meaning</option>
+                    <option value="$!adminAdvanceAmount.code" #if($!adminAdvanceAmount.code == $query.type) selected="selected" #end>$!adminAdvanceAmount.meaning</option>
+                    <option value="$!receiveFine.code" #if($!receiveFine.code == $query.type) selected="selected" #end>$!receiveFine.meaning</option>
+                    <option value="$!receiveAfterAdvance.code" #if($!receiveAfterAdvance.code == $query.type) selected="selected" #end>$!receiveAfterAdvance.meaning</option>
+                </select>
+                <label class="label_time txt_rg">交易时间</label>
+                <input type="text" id="classname" class="lay_date" style="margin-right:10px;"
+                       name="begin_date" value='$!query.queryBeginDate' onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){  }});" readonly="readonly" />
+                <em>到</em>
+                <input type="text" id="" class="lay_date" name="end_date" value='$!query.queryEndDate'
+                       onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){}});" readonly="readonly" />
+                <input type="submit"  class="jgbut" id="jgbut" value="搜索">
+            </div>
+        </form>
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td>交易类型</td>
+            <td>平台余额变化</td>
+            <td>交易平台资金余额</td>
+            <td>交易时间</td>
+            <td>交易相关用户手机号</td>
+        </tr>
+        #foreach($!adminAccountFlow in $!adminAccountFlows)
+            <tr>
+                <td>
+                    #foreach($!flowType in $!flowTypes)
+                        #if($!flowType.code == $!adminAccountFlow.type)
+                            $!flowType.meaning
+                        #end
+                    #end
+                </td>
+                <td>
+                    #if($!adminAccountFlow.status == 1)
+                        +$!{adminAccountFlow.amount}
+                    #elseif($!adminAccountFlow.status == 0)
+                        -$!{adminAccountFlow.amount}
+                    #end
+                </td>
+                <td>$!adminAccountFlow.balanceAfter</td>
+                <td>$!dateFormatUtils.format($!adminAccountFlow.created,"yyyy-MM-dd") </td>
+                <td>$!adminAccountFlow.phone</td>
+            </tr>
+        #end
+    </table>
+</div>
+#pagination("/account/flow_list.jhtml?$!{query.queryString()}" $!queryResult)

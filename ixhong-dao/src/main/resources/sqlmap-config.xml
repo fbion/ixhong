@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="logImpl" value="LOG4J"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.ixhong.domain.pojo.OrganizationDO" alias="OrganizationDO" />
+		<typeAlias type="com.ixhong.domain.pojo.OrganizationMemberDO" alias="OrganizationMemberDO" />
+		<typeAlias type="com.ixhong.domain.pojo.OrganizationRegistrationDO" alias="OrganizationRegistrationDO" />
+		<typeAlias type="com.ixhong.domain.pojo.OrganizationAccountDO" alias="OrganizationAccountDO" />
+		<typeAlias type="com.ixhong.domain.pojo.OrganizationAccountFlowDO" alias="OrganizationAccountFlowDO" />
+		<typeAlias type="com.ixhong.domain.pojo.OrganizationMiscDO" alias="OrganizationMiscDO" />
+        <typeAlias type="com.ixhong.domain.pojo.TeacherDO" alias="TeacherDO"/>
+        <typeAlias type="com.ixhong.domain.pojo.CourseDO" alias="CourseDO"/>
+        <typeAlias type="com.ixhong.domain.pojo.AdminDO" alias="AdminDO"/>
+        <typeAlias type="com.ixhong.domain.pojo.YibaoCityDO" alias="YibaoCityDO"/>
+        <typeAlias type="com.ixhong.domain.pojo.InterestRateDO" alias="InterestRateDO"/>
+        <typeAlias type="com.ixhong.domain.pojo.OrganizationAccountFlowDO" alias="OrganizationAccountFlowDO"/>
+        <typeAlias type="com.ixhong.domain.pojo.OrganizationWithdrawDO" alias="OrganizationWithdrawDO"/>
+        <typeAlias type="com.ixhong.domain.pojo.AccountDO" alias="AccountDO"/>
+
+       <!--阳光e贷-->
+		<typeAlias type="com.ixhong.domain.pojo.StudentDO" alias="StudentDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentBasicDO" alias="StudentBasicDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentJobDO" alias="StudentJobDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentEducationDO" alias="StudentEducationDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentRelativesDO" alias="StudentRelativesDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentUsageDO" alias="StudentUsageDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.BiddingDO" alias="BiddingDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.BiddingItemDO" alias="BiddingItemDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.BankDO" alias="BankDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentAccountDO" alias="StudentAccountDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentAccountFlowDO" alias="StudentAccountFlowDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.StudentBillStageDO" alias="StudentBillStageDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.AccountFlowDO" alias="AccountFlowDO"/>
+		<!--投资人-->
+		<typeAlias type="com.ixhong.domain.pojo.LenderDO" alias="LenderDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.LenderAccountDO" alias="LenderAccountDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.LenderAccountFlowDO" alias="LenderAccountFlowDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.BiddingItemDO" alias="BiddingItemDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.LenderBillStageDO" alias="LenderBillStageDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.ArticleDO" alias="ArticleDO"/>
+		<typeAlias type="com.ixhong.domain.pojo.LinksDO" alias="LinksDO" />
+
+    </typeAliases>
+	<mappers>
+        <mapper resource="sqlmap/Organization-mapper.xml"/>
+        <mapper resource="sqlmap/Teacher-mapper.xml"/>
+        <mapper resource="sqlmap/Course-mapper.xml"/>
+		<mapper resource="sqlmap/Organization-account-mapper.xml"/>
+		<mapper resource="sqlmap/Organization-member-mapper.xml"/>
+		<mapper resource="sqlmap/Organization-misc-mapper.xml"/>
+		<mapper resource="sqlmap/Organization-registration-mapper.xml"/>
+		<mapper resource="sqlmap/Admin-mapper.xml"/>
+		<mapper resource="sqlmap/YibaoCity-mapper.xml"/>
+		<mapper resource="sqlmap/InterestRate-mapper.xml"/>
+		<mapper resource="sqlmap/Organization-account-flow-mapper.xml"/>
+		<mapper resource="sqlmap/Organization-withdraw-mapper.xml"/>
+		<mapper resource="sqlmap/Account-mapper.xml"/>
+		<!--阳光e贷-->
+		<mapper resource="sqlmap/Student-mapper.xml"/>
+		<mapper resource="sqlmap/Student-basic-mapper.xml"/>
+		<mapper resource="sqlmap/Student-job-mapper.xml"/>
+		<mapper resource="sqlmap/Student-education-mapper.xml"/>
+		<mapper resource="sqlmap/Student-relatives-mapper.xml"/>
+		<mapper resource="sqlmap/Student-usage-mapper.xml"/>
+		<mapper resource="sqlmap/Bank-mapper.xml"/>
+		<mapper resource="sqlmap/Bidding-mapper.xml"/>
+		<mapper resource="sqlmap/Bidding-item-mapper.xml"/>
+		<mapper resource="sqlmap/Student-account-mapper.xml"/>
+		<mapper resource="sqlmap/Student-account-flow-mapper.xml"/>
+		<mapper resource="sqlmap/Student-bill-stage-mapper.xml" />
+		<!--投资人-->
+		<mapper resource="sqlmap/Lender-mapper.xml"/>
+		<mapper resource="sqlmap/Lender-account-mapper.xml"/>
+		<mapper resource="sqlmap/Lender-account-flow-mapper.xml"/>
+		<mapper resource="sqlmap/Bidding-item-mapper.xml"/>
+		<mapper resource="sqlmap/Lender-bill-stage-mapper.xml"/>
+		<mapper resource="sqlmap/Account-flow-mapper.xml"/>
+		<mapper resource="sqlmap/Article-mapper.xml"/>
+		<mapper resource="sqlmap/Links-mapper.xml"/>
+	</mappers>
+</configuration>

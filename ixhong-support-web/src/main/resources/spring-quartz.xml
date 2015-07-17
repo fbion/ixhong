@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+       default-autowire="byName">
+
+    <!-- 非cluster机制 -->
+    <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobFactory">
+            <bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
+        </property>
+        <property name="triggers">
+            <list>
+
+                <ref bean="biddingInvalidJobTrigger" />
+                <ref bean="biddingOverdueSMSJobTrigger" />
+                <ref bean="biddingRepaySMSJobTrigger" />
+                <ref bean="biddingOverdueJobTrigger" />
+                <ref bean="lenderWithdrawTrigger" />
+                <ref bean="organizationWithdrawTrigger" />
+            </list>
+        </property>
+        <property name="autoStartup" value="true"/>
+    </bean>
+
+
+    <!-- 投资人提现trigger -->
+    <bean id="lenderWithdrawTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 0/15 * * * ?" />
+        <property name="jobDetail" ref="lenderWithdrawJobDetail" />
+    </bean>
+    <bean id="lenderWithdrawJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="lenderWithdrawJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="lenderWithdrawJob" class="com.xhd.support.web.service.job.LenderWithdrawJob" />
+
+    <!-- 机构提现trigger -->
+    <bean id="organizationWithdrawTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 0/15 * * * ?" />
+        <property name="jobDetail" ref="organizationWithdrawJobDetail" />
+    </bean>
+    <bean id="organizationWithdrawJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="organizationWithdrawJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="organizationWithdrawJob" class="com.xhd.support.web.service.job.OrganizationWithdrawJob" />
+
+    <!-- 判断标的是否到期未投满而流标  0/30 * * * * ? 每三十秒触发一次 -->
+    <bean id="biddingInvalidJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0/30 * * * * ?" />
+        <property name="jobDetail"  ref="biddingInvalidJobDetail" />
+    </bean>
+    <bean id="biddingInvalidJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="biddingInvalidJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="biddingInvalidJob" class="com.xhd.support.web.service.job.BiddingInvalidJob"/>
+
+    <!-- 标的逾期   0 0 0 * * ?  每天零点触发 -->
+    <bean id="biddingOverdueJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 0 0 * * ?" />
+        <property name="jobDetail"  ref="biddingOverdueJobDetail" />
+    </bean>
+    <bean id="biddingOverdueJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="biddingOverdueJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="biddingOverdueJob" class="com.xhd.support.web.service.job.BiddingOverdueJob"/>
+
+    <!-- 标的催款   0 0 14 * * ?  每天下午两点触发 -->
+    <bean id="biddingRepaySMSJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 0 14 * * ?" />
+        <property name="jobDetail"  ref="biddingRepaySMSJobDetail" />
+    </bean>
+    <bean id="biddingRepaySMSJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="biddingRepaySMSJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="biddingRepaySMSJob" class="com.xhd.support.web.service.job.BiddingRepaySMSJob"/>
+
+    <!-- 标的逾期催款   0 0 14 * * ?  每天下午两点触发 -->
+    <bean id="biddingOverdueSMSJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="cronExpression" value="0 0 14 * * ?" />
+        <property name="jobDetail"  ref="biddingOverdueSMSJobDetail" />
+    </bean>
+    <bean id="biddingOverdueSMSJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="biddingOverdueSMSJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="biddingOverdueSMSJob" class="com.xhd.support.web.service.job.BiddingOverdueSMSJob"/>
+
+
+
+</beans>

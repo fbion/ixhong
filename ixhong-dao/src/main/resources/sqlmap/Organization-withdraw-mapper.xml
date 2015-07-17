@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrganizationWithdrawMapper">
+    <resultMap type="OrganizationWithdrawDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="organization_code" property="organizationCode"/>
+        <result column="status" property="status"/>
+        <result column="amount" property="amount"/>
+        <result column="fee" property="fee"/>
+        <result column="balance" property="balance"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,organization_id,organization_name,organization_code,status,amount,fee,balance,created,modified
+    </sql>
+
+    <select id="insert" parameterType="OrganizationWithdrawDO">
+        insert into xhd_organization_withdraw(organization_id,organization_name,organization_code,status,amount,fee,balance,created,modified)
+        values(#{organizationId},#{organizationName},#{organizationCode},#{status},#{amount},#{fee},#{balance},NOW(),NOW())
+    </select>
+
+    <sql id="query">
+        <where>
+        <if test="organizationId != null">
+            and organization_id = #{organizationId}
+        </if>
+        <if test="organizationName != null">
+            and organization_name like BINARY CONCAT('%', #{organizationName},'%')
+        </if>
+        <if test="organizationCode != null">
+            and organization_code = #{organizationCode}
+        </if>
+        <if test="status != -1">
+            and status = #{status}
+        </if>
+        <if test="beginDate != null and endDate != null">
+            and created BETWEEN #{beginDate} and #{endDate}
+        </if>
+        </where>
+    </sql>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(*) from xhd_organization_withdraw
+        <include refid="query"/>
+    </select>
+
+    <select id="countByStatus" resultType="java.lang.Integer">
+        select count(*) from xhd_organization_withdraw WHERE
+        status = #{status} AND organization_id = #{organizationId} limit 1
+    </select>
+
+    <select id="query" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization_withdraw
+         <include refid="query"/>
+        order by `created` DESC limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="getById" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization_withdraw where id = #{VALUE} limit 1
+    </select>
+
+    <update id="updateAuditStatus">
+        update xhd_organization_withdraw
+        SET status = #{status},
+        modified = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

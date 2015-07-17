@@ -1,0 +1,85 @@
+<script type="text/javascript" src="/js/umeditor1_2_2/third-party/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/umeditor1_2_2/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/umeditor1_2_2/umeditor.js"></script>
+<script type="text/javascript" src="/js/umeditor1_2_2/lang/zh-cn/zh-cn.js"></script>
+<div class="content">
+    <div class="titles">
+        <p>平台管理><span>媒体报道></span><span>报道详情</span></p>
+        </p>
+    </div>
+<div class="course">
+    <form id="mediaForm"  action="/article/update_action.jhtml" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="content" id="content"  value='$!article.content'>
+        <input type="hidden" name="imgUrl" id="imgUrl"  value='$!article.image'>
+        <input type="hidden" name="token" id="token"  value='$!token'>
+        <input type="hidden" name="type" id="type"  value='2'>
+        <input type="hidden" name="id" id="id"  value='$!article.id'>
+        <table class="table2">
+            <tr>
+                <td>标题</td>
+                <td >
+                    <input type="text" name="title" id="title"  value="$!article.title" style="margin-right: 60px; width: 300px">
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+            <tr>
+                <td>摘要</td>
+                <td >
+                    <textarea name="summary" id="summary" style="width: 500px;height: 50px">$!article.summary</textarea>
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+            <tr>
+                <td >图片</td>
+                <td>
+                    <div style="width:100px;overflow:hidden;">
+                        <input type="file" name="file" id="file" style="position: absolute;top:14px;left:4px;width:100px;overflow:hidden;opacity:0;z-index:100" ></input>
+                        <div style="position:relative;width:100px;height:25px;line-height:25px;background:orange;border-radius:5px;text-align:center;">选择文件</div>
+                    </div>
+                    <span><img src="$!article.image" width="100px" height="100px" style="margin-top:10px;"></span>
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</div>
+<!--style给定宽度可以影响编辑器的最终宽度-->
+<script type="text/plain" id="myEditor" style="width:1000px;height:240px;">
+</script>
+<input type="submit" name="media_firm" id="media_firm" value="确认修改" style="background: #1abc9c;display: block;padding: 9px 50px;color: #fff;margin: 20px auto;"/><br/>
+<script type="text/javascript">
+    $(function(){
+        //实例化编辑器
+        var um = UM.getEditor('myEditor');
+        um.focus();
+        um.execCommand('forecolor','#000');
+        var content = $("#content").val();
+        UM.getEditor('myEditor').setContent(content,true);
+    });
+
+    $("#media_firm").on("click",function(e){
+        var title = $("#title").val();
+        var content = UM.getEditor('myEditor').getContent();
+        var summary = $("#summary").val();
+        if(title == '' || title == null ){
+            alert("请输入标题");
+            return false;
+        }
+        if(title.length >= 128){
+            alert("标题长度太长,请重新输入");
+            return false;
+        }
+        if(content == '' || content == null ){
+            alert("请输入内容");
+            return false;
+        }
+        if(summary.length >=256){
+            alert("摘要内容太长,请重新输入");
+            return false;
+        }
+        $("#content").val(content);
+
+        $("#mediaForm").submit();
+    });
+</script>

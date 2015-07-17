@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrganizationAccountMapper">
+    <resultMap type="OrganizationAccountDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="address" property="address"/>
+        <result column="bank_branch" property="bankBranch"/>
+        <result column="name" property="name"/>
+        <result column="bail_percentage" property="bailPercentage"/>
+        <result column="lending_quotas" property="lendingQuotas"/>
+        <result column="account_number" property="accountNumber"/>
+        <result column="license_image" property="licenseImage"/>
+        <result column="bail" property="bail"/>
+        <result column="balance" property="balance"/>
+        <result column="balance_frozen" property="balanceFrozen"/>
+        <result column="version" property="version" />
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,organization_id,bank_name,address,bank_branch,`name`,bail_percentage,bail,balance,balance_frozen,lending_quotas,account_number,license_image,`version`,created,modified
+    </sql>
+
+    <select id="getAll" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization_account limit 10
+    </select>
+
+    <insert id="insert" parameterType="OrganizationAccountDO">
+        insert into xhd_organization_account(organization_id,bank_name,address,bank_branch,name,
+        account_number,license_image,created,modified)
+        values(#{organizationId},#{bankName},#{address},#{bankBranch},#{name},#{accountNumber},
+        #{licenseImage},NOW(),NOW())
+    </insert>
+
+    <select id="getByOrganizationId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization_account where organization_id = #{value} limit 1
+    </select>
+
+    <update id="updateBailPercent">
+        update xhd_organization_account set bail_percentage = #{bailPercentage} where organization_id = #{organizationId}
+    </update>
+
+    <update id="updateLendingQuotas">
+        update xhd_organization_account set lending_quotas = #{lendingQuotas} where organization_id = #{organizationId}
+    </update>
+
+    <update id="updateBalance">
+        update xhd_organization_account set
+        <if test="balance != null">
+            balance = #{balance},
+        </if>
+        <if test="bail != null">
+        bail = #{bail},
+        </if>
+        <if test="balanceFrozen != null">
+        balance_frozen = #{balanceFrozen},
+        </if>
+        `version` = (`version` + 1),
+        modified = NOW()
+        where organization_id = #{organizationId} and `version` = #{version}
+    </update>
+
+    <update id="update" parameterType="OrganizationAccountDO">
+        update xhd_organization_account SET
+        <if test="bankName != null">
+            bank_name = #{bankName},
+        </if>
+        <if test="address != null">
+            address = #{address},
+        </if>
+        <if test="bankBranch != null">
+            bank_branch = #{bankBranch},
+        </if>
+        <if test="name != null">
+            name = #{name},
+        </if>
+        <if test="bailPercentage != null">
+            bail_percentage = #{bailPercentage},
+        </if>
+        <if test="lendingQuotas != null">
+            lending_quotas = #{lendingQuotas},
+        </if>
+        <if test="accountNumber != null">
+            account_number = #{accountNumber},
+        </if>
+        <if test="licenseImage != null">
+            license_image = #{licenseImage},
+        </if>
+        modified = NOW()
+        where organization_id = #{organizationId}
+    </update>
+
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LenderAccountMapper">
+    <resultMap type="LenderAccountDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="lender_id" property="lenderId"/>
+        <result column="balance" property="balance"/>
+        <result column="balance_frozen" property="balanceFrozen"/>
+        <result column="current_interest" property="currentInterest" />
+        <result column="total_interest" property="totalInterest" />
+        <result column="principal" property="principal" />
+        <result column="bank_card_id" property="bankCardId"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="deal_password" property="dealPassword" />
+        <result column="version" property="version" />
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,lender_id,balance,balance_frozen,current_interest,total_interest,principal,bank_card_id,bank_name,deal_password,version,created,modified
+	</sql>
+
+    <select id="getByLenderId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_lender_account where lender_id = #{value} limit 1
+    </select>
+
+    <select id="getByLenderIdForUpdate" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_lender_account where lender_id = #{value} limit 1 FOR UPDATE
+    </select>
+
+    <insert id="insert">
+        INSERT INTO xhd_lender_account(lender_id,created,modified)
+        VALUES (#{lenderId},NOW(),NOW())
+    </insert>
+
+    <update id="update" parameterType="LenderAccountDO">
+        UPDATE xhd_lender_account SET
+        bank_card_id = #{bankCardId},
+        bank_name = #{bankName},
+        modified = NOW()
+        where lender_id = #{lenderId}
+    </update>
+
+    <update id="updateBalance" parameterType="LenderAccountDO">
+        UPDATE xhd_lender_account SET
+        <if test="balance != null">
+            balance = #{balance},
+        </if>
+        <if test="balanceFrozen != null">
+            balance_frozen = #{balanceFrozen},
+        </if>
+        <if test="principal != null">
+            principal = #{principal},
+        </if>
+        <if test="currentInterest != null">
+            current_interest = #{currentInterest},
+        </if>
+        <if test="totalInterest != null">
+            total_interest = #{totalInterest},
+        </if>
+        `version` = `version` + 1,
+        modified = NOW()
+        where lender_id = #{lenderId} and `version` = #{version}
+    </update>
+
+    <update id="updateDealPassword" >
+        UPDATE xhd_lender_account SET
+        deal_password = MD5(#{password}),
+        modified = NOW()
+        where lender_id = #{lenderId}
+    </update>
+
+    <select id="validateDealPassword" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_lender_account where lender_id = #{lenderId} and deal_password = MD5(#{dealPassword}) limit 1
+    </select>
+
+</mapper>

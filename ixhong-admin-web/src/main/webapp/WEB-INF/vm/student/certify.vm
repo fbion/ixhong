@@ -1,0 +1,118 @@
+#set($title = "身份认证")
+
+
+<div class="content">
+    <div class="titles">
+        <p>满标审核 >$student.name><span>提交实名认证</span>
+        </p>
+    </div>
+    <div class="course">
+        <div style="width:350px;margin:0 auto;height:300px;">
+            <div>
+                <form id="certifyForm" action="/student/certify_action.jhtml" method="post">
+                    <input type="hidden" name="name" id="name" value="$!student.name">
+                    <input type="hidden" name="student_id" id="student_id" value="$!student.id">
+                    <input type="hidden" name="card_id" id="card_id" value="$!student.cardId">
+                    <input type="hidden" name="photo_url" id="photo_url">
+                <div style="height:100px;margin-top:40px;">
+                    <div class="auth">
+                        <label class="auth_label">姓名：</label>
+                        <div class="auth_s"><span>$!student.name</span>
+                        </div>
+                    </div>
+                    <div class="auth">
+                        <label class="auth_label">身份证号：</label>
+                        <div class="auth_s"><span>$!student.cardId</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth" style="margin-top:25px;margin-bottom:20px;">
+                    <label class="auth_label"文件上传：</label>
+                    <div class="ib">
+                        <img src="/images/default.jpg" id="default" alt="" title="" style="float:left;margin:-17px 20px 0 0;"  width="60" height="60"/>
+                        <div class="ifile-wrap">
+                            <input class="ifile" type="file" name="photo" id="photo"  />
+                            <em>上传(可选)</em>
+                        </div>
+                    </div>
+                    <div class="photoem_"><span style="display:block;width:400px;line-height:20px;font-size:12px;color:#dbdcde;">照片必须是JPG/PNG格式，且小于100KB; 图片中人脸头像应当比较清晰，不能因镜头散焦或运动而模糊; 背景简单，无复杂场景</span></div>
+                </div>
+                <div><input type="button" value="提交认证" id="subtn" class="btn200" style="margin-top:55px;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $('#subtn').click(function() {
+//            if ($('#photo_url').val() == '') {
+//                alert('请上传认证照片');
+//                return false;
+//            }
+            $.ajax({
+                type:"POST",
+                url:"/student/certify_action.jhtml",
+                data:$('#certifyForm').serialize(),
+                async:false,
+                dataType:"json",
+                success:function(data) {
+                    if (data.code == 'S00000') {
+                        var obj = data.data;
+//                        if (obj.objCode == '00') {
+//                            alert(obj.objMessage + ', 照片识别评分：' + obj.objScore + '分');
+//                        } else {
+//                            alert(obj.objMessage);
+//                        }
+                        if ($('#photo_url').val == '') {
+                            location.href = '/student/certify_result.jhtml?result=' + obj._code;
+                        } else {
+                            location.href = '/student/certify_result.jhtml?result=' + obj._code + '&score=' + obj._score;
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function(request) {
+                    alert("网络异常，请稍后再试");
+                }
+            });
+        })
+
+
+        $("#photo").uploadify({
+            //是否自动上传
+            'auto':true,
+            //flash
+            'swf': "/lib/uploadify.swf",
+            //上传处理程序
+            'uploader':'/student/upload.jhtml',
+            'buttonText':'',
+            //'formData': {type: 'image'},
+            //浏览按钮的宽度
+            'width':100,
+            //浏览按钮的高度
+            'height':'40',
+            'fileObjName':"file",
+            'hideButton':true,
+            'fileTypeExts':'*.jpg;*.png',
+            'fileDesc':'请选择图片',
+            'fileSizeLimit':100,
+            'onSelect': function (event, ID, fileObj) {
+                $('#default').attr("src", "/images/loading.gif");
+            },
+            'onUploadSuccess':function(file, data, response){
+                var _d = eval('('+data+')');
+                if (_d.code == 'S00000') {
+                    var filename = _d.data.filename;
+                    $('#default').attr("src", "http://" + _d.data.imgHost + "/ds/x2/" + filename);
+                    $('#photo_url').val("http://" + _d.data.imgHost + "/ds/x2/" + filename);
+                } else {
+                    alert(data.message);
+                }
+            }
+        });
+    })
+
+</script>

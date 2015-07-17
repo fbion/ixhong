@@ -1,0 +1,85 @@
+#set($title = "修改保证金")
+
+<div class="content">
+    <div class="titles">
+        <p><span>修改审核结论</span></p>
+    </div>
+    <div class="course">
+        <form name="updateBailForm" id="updateBailForm" action="/organization/update_bail_percent_action.jhtml" method="post">
+            <input type="hidden" name="token" value="$!{token}">
+            <input type="hidden" name="organization_id" value="$!{organization.id}">
+            <input type="hidden" id="bail_percentage" name="bail_percentage" value="$!account.bailPercentage">
+
+            <input type="hidden" id="status" value="$!{status}">
+            <input type="hidden" id="name" value="$!{name}">
+            <input type="hidden" id="email" value="$!{email}">
+            <input type="hidden" id="code" value="$!{code}">
+            <input type="hidden" id="page" value="$!{page}">
+
+            <table class="table2">
+                <tr><td valign="top">学校名称</td><td>$!{organization.name}</td></tr>
+                <tr><td valign="top">保证金比例(本科及以上)</td><td><input type="text" id="undergraduate" name="undergraduate" value="$!bailJson.get('undergraduate')" class="w150 numheight"><span>   %</span></td></td></tr>
+                <tr><td valign="top">保证金比例(大专学历)</td><td><input type="text" id="junior" name="junior" value="$!bailJson.get('junior')" class="w150 numheight"><span>   %</span></td></td></tr>
+                <tr><td valign="top">保证金比例(大专以下)</td><td><input type="text" id="junior_lower" name="junior_lower" value="$!bailJson.get('juniorLower')" class="w150 numheight"><span>   %</span></td></td></tr>
+                <tr id="tr_type"><td valign="top">机构类别</td><td>
+                    #foreach($e in $!levelEnums)
+                        <input type="radio" name="level" value="$!e.code" #if($!e.code == $!organization.level) checked
+                        #end>&nbsp;$e.meaning &nbsp;&nbsp;&nbsp;
+                    #end
+                </td></tr>
+                <tr id="tr_type"><td valign="top">复检频率</td><td>
+                    #foreach($e in $!checkTypeEnums)
+                        <input type="radio" name="check_type" value="$!e.code" #if($!e.code == $!organization.checkType) checked
+                        #end>&nbsp;$e.meaning &nbsp;&nbsp;&nbsp;
+                    #end
+                </td></tr>
+                <tr id="tr_quotas"><td valign="top">额度限制</td><td><input type="text" id="lending_quotas" name="lending_quotas" value="$!account.lendingQuotas" class="w150 numheight"><span>   万元</span></td></td></tr>
+                <tr><td></td><td><input type="button" name="course_firm" id="btn_sub" value="确认" class="course_but">
+                    <input type="button" name="course_quit" id="course_quit" value="取消" class="course_but" onclick="history.go(-1)"></td></tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script src="/js/organization.js"></script>
+
+<script>
+    $(function() {
+        if ($('#bail_percentage').val() != '') {
+            var bailJson = $account.bailPercentage;
+            $('#undergraduate').val(bailJson.undergraduate);
+            $('#junior').val(bailJson.junior);
+            $('#junior_lower').val(bailJson.juniorLower);
+        }
+
+        $('#btn_sub').click(function() {
+            if (check_bail_percent('undergraduate') && check_bail_percent('junior') && check_bail_percent('junior_lower')
+                    &&check_level('level')&&check_type('check_type')&&check_lending_quotas('lending_quotas')) {
+                var bailPercentage = {
+                    "undergraduate":$('#undergraduate').val(),
+                    "junior":$('#junior').val(),
+                    "juniorLower":$('#junior_lower').val()
+                };
+                $('#bail_percentage').val(JSON.stringify(bailPercentage));
+                $.ajax({
+                    type:"POST",
+                    url:"/organization/update_bail_percent_action.jhtml",
+                    data:$('#updateBailForm').serialize(),
+                    async:false,
+                    dataType:"json",
+                    success:function(data) {
+                        if (data.code == 'S00000') {
+                            alert('修改成功');
+                            location.href = '/organization/list.jhtml?status=' + $('#status').val() + '&name=' + $('#name').val() + '&email=' + $('#email').val() + '&code=' + $('#code').val() + '&page=' + $('#page').val();
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function(request) {
+                        alert("网络异常，请稍后再试");
+                    }
+                });
+            }
+        });
+    })
+</script>

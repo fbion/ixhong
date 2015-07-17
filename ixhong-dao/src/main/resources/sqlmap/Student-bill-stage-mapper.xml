@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudentBillStageMapper">
+    <resultMap type="StudentBillStageDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId" />
+        <result column="bidding_id" property="biddingId" />
+        <result column="organization_id" property="organizationId" />
+        <result column="organization_name" property="organizationName" />
+        <result column="phone" property="phone" />
+        <result column="student_name" property="studentName" />
+        <result column="course_name" property="courseName" />
+        <result column="stage" property="stage" />
+        <result column="total_stage" property="totalStage" />
+        <result column="amount" property="amount" />
+        <result column="interest" property="interest" />
+        <result column="principal" property="principal" />
+        <result column="fee" property="fee" />
+        <result column="deadline" property="deadline" />
+        <result column="repayment_date" property="repaymentDate" />
+        <result column="overdue_days" property="overdueDays" />
+        <result column="overdue_fee" property="overdueFee" />
+        <result column="advance_type" property="advanceType" />
+        <result column="quartz_date" property="quartzDate" />
+        <result column="version" property="version" />
+        <result column="status" property="status" />
+        <result column="is_overdue" property="isOverdue" />
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,student_id,bidding_id,organization_id,organization_name,student_name,course_name,phone,stage,total_stage,amount,interest,principal,
+        fee,deadline,repayment_date,is_overdue,overdue_days,overdue_fee,advance_type,quartz_date,`version`,`status`,created,modified
+    </sql>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_student_bill_stage WHERE id = #{id} and student_id = #{studentId} limit 1
+    </select>
+
+    <sql id="query">
+        <if test="biddingId != null">
+            and bidding_id = #{biddingId }
+        </if>
+        <if test="studentId != null">
+            and student_id = #{studentId }
+        </if>
+        <if test="studentName != null">
+            and student_name like BINARY concat('%', #{studentName},'%')
+        </if>
+        <if test="organizationId != null">
+            and organization_id = #{organizationId }
+        </if>
+        <if test="phone != null">
+            and phone like concat(#{phone} , '%')
+        </if>
+        <if test="status != null">
+            and status != #{status}
+        </if>
+    </sql>
+
+    <insert id="insertBatch">
+        insert into xhd_student_bill_stage(student_id,bidding_id,organization_id,organization_name,phone,student_name,course_name,stage,total_stage,amount,
+        interest,principal,fee,deadline,repayment_date,`status`,created,modified)
+        values
+        <foreach collection="billStageList" item="item" index="index" separator=",">
+            (#{item.studentId},#{item.biddingId},#{item.organizationId},#{item.organizationName},#{item.phone},#{item.studentName},#{item.courseName},#{item.stage},#{item.totalStage},#{item.amount},#{item.interest},
+             #{item.principal},#{item.fee},#{item.deadline},#{item.repaymentDate},#{item.status},
+             NOW(),NOW())
+        </foreach>
+    </insert>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_student_bill_stage where 1 = 1
+        <include refid="query"/>
+    </select>
+
+    <select id="query" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_student_bill_stage where 1 = 1
+        <include refid="query"/>
+        order by status,id limit #{startRow},#{pageSize}
+    </select>
+
+    <update id="update" parameterType="StudentBillStageDO">
+        update xhd_student_bill_stage
+        set stage = #{stage},
+            total_stage = #{totalStage},
+            amount = #{amount},
+            interest = #{interest},
+            principal = #{principal},
+            fee = #{fee},
+            deadline = #{deadline},
+            repayment_date = #{repaymentDate},
+            `status` = #{status},
+            overdue_days = #{overdueDays},
+            overdue_fee = #{overdueFee},
+            advance_type = #{advanceType},
+            quartz_date = #{quartzDate},
+            is_overdue = #{isOverdue},
+            `version` = (`version` + 1),
+            modified = NOW()
+        where id = #{id} and `version` = #{version}
+    </update>
+
+    <update id="updateStatus">
+        update xhd_student_bill_stage
+        set `status` = #{status},
+             modified = NOW()
+        where bidding_id = #{biddingId} AND stage = #{stage}
+    </update>
+
+    <select id="getByStatus" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_bill_stage where `status` = #{value} limit 20
+    </select>
+
+    <select id="getByBiddingId" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_student_bill_stage where bidding_id = #{value}
+    </select>
+
+    <select id="getOverdueBillStage" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_student_bill_stage where
+        `status` = #{status} and is_overdue = #{overdue}
+        <![CDATA[
+            and deadline < #{date}
+        ]]>
+        <if test="quartzDate != null" >
+            <![CDATA[
+            and quartz_date < #{quartzDate}
+            ]]>
+        </if>
+        limit 10
+    </select>
+
+
+    <select id="getForSMS" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_bill_stage where
+        deadline = #{deadline} and `status` = 1 and is_overdue = #{isOverdue}
+        limit #{startRow},#{pageSize}
+    </select>
+
+</mapper>

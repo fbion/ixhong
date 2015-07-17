@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrganizationRegistrationMapper">
+    <resultMap type="OrganizationRegistrationDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="found_type" property="foundType"/>
+        <result column="union_name" property="unionName"/>
+        <result column="address" property="address"/>
+        <result column="license_office" property="licenseOffice"/>
+        <result column="found_date" property="foundDate"/>
+        <result column="telephone" property="telephone"/>
+        <result column="chain" property="chain"/>
+        <result column="website" property="website"/>
+        <result column="description" property="description"/>
+        <result column="license_image" property="licenseImage"/>
+        <result column="code_image" property="codeImage"/>
+        <result column="tax_image" property="taxImage"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,organization_id,found_type,union_name,address,license_office,found_date,
+        telephone,chain,website,description,license_image,code_image,tax_image,created,modified
+    </sql>
+
+    <select id="insert" parameterType="OrganizationRegistrationDO">
+        insert into xhd_organization_registration(organization_id,found_type,union_name,address,license_office,found_date,
+        telephone,chain,website,description,license_image,code_image,tax_image,created,modified)
+        values(#{organizationId},#{foundType},#{unionName},#{address},#{licenseOffice},#{foundDate},
+        #{telephone},#{chain},#{website},#{description},#{licenseImage},#{codeImage},#{taxImage},NOW(),NOW())
+    </select>
+
+    <select id="getByOrganizationId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization_registration where organization_id = #{value} limit 1
+    </select>
+
+    <update id="update" parameterType="OrganizationRegistrationDO">
+        update xhd_organization_registration SET
+        found_type = #{foundType},
+        union_name = #{unionName},
+        address = #{address},
+        license_office = #{licenseOffice},
+        found_date = #{foundDate},
+        telephone = #{telephone},
+        chain = #{chain},
+        website = #{website},
+        <if test="description != null">
+            description = #{description},
+        </if>
+        license_image = #{licenseImage},
+        code_image = #{codeImage},
+        tax_image = #{taxImage},
+        modified = NOW()
+        where organization_id = #{organizationId}
+    </update>
+
+</mapper>

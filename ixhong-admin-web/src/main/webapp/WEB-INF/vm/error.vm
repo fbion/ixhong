@@ -1,0 +1,11 @@
+#set($title = "系统错误")
+
+<div>
+    <h3>$!{path}</h3><br/>
+    #if($!messages)
+            $!messages
+        #else
+            <h3>页面不存在</h3>
+    #end
+
+</div>

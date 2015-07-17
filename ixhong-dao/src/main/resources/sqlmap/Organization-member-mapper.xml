@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrganizationMemberMapper">
+    <resultMap type="OrganizationMemberDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="corporation" property="corporation"/>
+        <result column="card_id" property="cardId"/>
+        <result column="phone" property="phone"/>
+        <result column="description" property="description"/>
+        <result column="card_front_image" property="cardFrontImage"/>
+        <result column="card_back_image" property="cardBackImage"/>
+        <result column="authorization_image" property="authorizationImage"/>
+        <result column="credit_image" property="creditImage"/>
+        <result column="contact" property="contact"/>
+        <result column="contact_phone" property="contactPhone"/>
+        <result column="contact_title" property="contactTitle"/>
+        <result column="contact_card_id" property="contactCardId"/>
+        <result column="shareholders" property="shareholders"/>
+        <result column="managers" property="managers"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,organization_id,corporation,card_id,phone,description,card_front_image,authorization_image,
+        card_back_image,credit_image,contact,contact_phone,contact_title,contact_card_id,shareholders,managers,created,modified
+	</sql>
+
+    <select id="insert" parameterType="OrganizationMemberDO">
+        insert into xhd_organization_member(organization_id,corporation,card_id,phone,description,card_front_image,authorization_image,
+        card_back_image,credit_image,contact,contact_phone,contact_title,contact_card_id,shareholders,managers,created,modified)
+        values(#{organizationId},#{corporation},#{cardId},#{phone},#{description},#{cardFrontImage},#{authorizationImage},#{cardBackImage},
+        #{creditImage},#{contact},#{contactPhone},#{contactTitle},#{contactCardId},#{shareholders},#{managers},NOW(),NOW())
+    </select>
+
+    <select id="getByOrganizationId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization_member where organization_id = #{value} limit 1
+    </select>
+
+    <update id="update" parameterType="OrganizationMemberDO">
+        update xhd_organization_member set
+        corporation = #{corporation},
+        card_id = #{cardId},
+        phone = #{phone},
+        <if test="description != null">
+            description = #{description},
+        </if>
+        card_front_image = #{cardFrontImage},
+        card_back_image = #{cardBackImage},
+        authorization_image = #{authorizationImage},
+        <if test="creditImage != null">
+            credit_image = #{creditImage},
+        </if>
+        contact = #{contact},
+        contact_phone = #{contactPhone},
+        contact_title = #{contactTitle},
+        contact_card_id = #{contactCardId},
+        shareholders = #{shareholders},
+        managers = #{managers},
+        modified = NOW()
+        where organization_id = #{organizationId}
+    </update>
+
+</mapper>

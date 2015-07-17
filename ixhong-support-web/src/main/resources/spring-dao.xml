@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-autowire="byName">
+
+
+	<!-- 学生 dao -->
+	<bean id="studentDao" class="com.xhd.dao.impl.StudentDaoImpl"/>
+	<bean id="studentAccountDao" class="com.xhd.dao.impl.StudentAccountDaoImpl"/>
+	<bean id="studentAccountFlowDao" class="com.xhd.dao.impl.StudentAccountFlowDaoImpl"/>
+	<bean id="studentBillStageDao" class="com.xhd.dao.impl.StudentBillStageDaoImpl"/>
+	<!-- 标的 dao -->
+	<bean id="biddingDao" class="com.xhd.dao.impl.BiddingDaoImpl"/>
+	<bean id="biddingItemDao" class="com.xhd.dao.impl.BiddingItemDaoImpl"/>
+	<!-- 投资人 dao -->
+	<bean id="lenderDao" class="com.xhd.dao.impl.LenderDaoImpl" />
+	<bean id="lenderAccountDao" class="com.xhd.dao.impl.LenderAccountDaoImpl"/>
+	<bean id="lenderAccountFlowDao" class="com.xhd.dao.impl.LenderAccountFlowDaoImpl"/>
+	<bean id="lenderBillStageDao" class="com.xhd.dao.impl.LenderBillStageDaoImpl" />
+	<!-- 机构、学好贷 dao -->
+	<bean id="organizationAccountDao" class="com.xhd.dao.impl.OrganizationAccountDaoImpl" />
+	<bean id="organizationAccountFlowDao" class="com.xhd.dao.impl.OrganizationAccountFlowDaoImpl" />
+	<bean id="accountFlowDao" class="com.xhd.dao.impl.AccountFlowDaoImpl"/>
+	<bean id="accountDao" class="com.xhd.dao.impl.AccountDaoImpl" />
+	<bean id="organizationWithdrawDao" class="com.xhd.dao.impl.OrganizationWithdrawDaoImpl" />
+</beans>

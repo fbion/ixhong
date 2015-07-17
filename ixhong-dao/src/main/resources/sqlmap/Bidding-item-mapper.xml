@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BiddingItemMapper">
+    <resultMap type="BiddingItemDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="bidding_id" property="biddingId"/>
+        <result column="lender_id" property="lenderId"/>
+        <result column="principal" property="principal"/>
+        <result column="interest" property="interest"/>
+        <result column="repaid" property="repaid" />
+        <result column="course_name" property="courseName"/>
+        <result column="student_id" property="studentId"/>
+        <result column="student_name" property="studentName"/>
+        <result column="current_interest" property="currentInterest"/>
+        <result column="current_stage" property="currentStage" />
+        <result column="total_stage" property="totalStage" />
+        <result column="next_repay_date" property="nextRepayDate" />
+        <result column="rate" property="rate" />
+        <result column="status" property="status" />
+        <result column="version" property="version"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,bidding_id,lender_id,principal,interest,repaid,course_name,student_id,student_name,current_interest,current_stage,total_stage,next_repay_date,rate,`status`,`version`,created,modified
+    </sql>
+
+    <insert id="insert" parameterType="BiddingItemDO">
+        insert into xhd_bidding_item(bidding_id,lender_id,principal,interest,course_name,student_id,student_name,total_stage,next_repay_date,rate,status,created,modified)
+        values( #{biddingId},#{lenderId},#{principal},#{interest},#{courseName},#{studentId},#{studentName},#{totalStage},#{nextRepayDate},#{rate},#{status}, NOW(), NOW())
+    </insert>
+
+    <select id="getById" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_bidding_item where id = #{value} limit 1
+    </select>
+
+    <select id="getByBiddingId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_bidding_item where bidding_id = #{biddingId}
+        order by created desc
+    </select>
+
+
+    <update id="updateStatusByBiddingId">
+        UPDATE xhd_bidding_item SET status = #{status}, modified = NOW()
+        where bidding_id = #{biddingId}
+    </update>
+
+<!--分页查询部分-->
+
+    <sql id="query">
+
+        <if test="lenderId != null">
+            AND lender_id =#{lenderId}
+        </if>
+
+        <if test="status != -1 and status!=null ">
+            and status = #{status }
+        </if>
+
+        <if test="beginDate != null">
+            and  `created` >=#{beginDate}
+        </if>
+
+        <if test=" endDate != null">
+            <![CDATA[
+             and SUBSTRING(`created`,1,10) <= #{endDate}
+            ]]>
+        </if>
+
+        <if test="lenderIds != null">
+            AND lender_id IN
+            <foreach collection="lenderIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+    </sql>
+
+    <select id="query" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_bidding_item where 1 = 1
+        <include refid="query"/>
+        order by id DESC limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(item.id) from xhd_bidding_item item where 1 = 1
+        <include refid="query"/>
+        order by id DESC
+    </select>
+
+    <update id="updateInTransaction" parameterType="BiddingItemDO">
+        UPDATE xhd_bidding_item SET
+        principal = #{principal},
+        repaid = #{repaid},
+        current_interest = #{currentInterest},
+        current_stage = #{currentStage},
+        total_stage = #{totalStage},
+        next_repay_date = #{nextRepayDate},
+        rate = #{rate},
+        status = #{status},
+        `version` = (`version` + 1)
+        where id = #{id} and lender_id = #{lenderId} and `version` = #{version}
+    </update>
+
+    <select id="biddingCount" resultType="java.lang.Integer">
+        select count(lender_id) from xhd_bidding_item where lender_id = #{VALUE}
+    </select>
+
+    <select id="getByLenderId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_bidding_item where lender_id = #{VALUE}
+    </select>
+
+    <select id="getSumInterestByBiddingId" resultType="java.lang.Double">
+        select sum(interest) from xhd_bidding_item where bidding_id = #{VALUE}
+    </select>
+
+    <select id="validateLenderBidding" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_bidding_item where bidding_id = #{biddingId} and lender_id = #{lenderId};
+    </select>
+
+</mapper>

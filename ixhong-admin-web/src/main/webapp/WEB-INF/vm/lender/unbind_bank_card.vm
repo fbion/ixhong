@@ -1,0 +1,39 @@
+#set($title = "银行卡解绑")
+
+<form id="unbind_form">
+    身份证号码：<input type="text" id="card_id" name="card_id" style="width:200px;"/><br><br>
+    银行卡号头6位：<input type="text" id="card_top" name="card_top" style="width:200px;"/><br><br>
+    银行卡号尾4位：<input type="text" id="card_last" name="card_last" style="width:200px;"/><br><br>
+    <input type="button" id="btn" value="解绑">
+</form>
+
+<script>
+    function check() {
+        if ($('#card_id').val() == '' || $('#card_top').val() == '' || $('#card_last').val() == '') {
+            alert('请输入相关值');
+            return false;
+        }
+        return true;
+    }
+
+    $(function() {
+        $('#btn').click(function() {
+
+            if (check()) {
+                $.ajax({
+                    type:'post',
+                    url:'/lender/unbind_bank_card_action.jhtml',
+                    data:$('#unbind_form').serialize(),
+                    dataType:'json',
+                    success:function(data) {
+                        if (data.code == 'S00000') {
+                            alert('解绑成功');
+                        } else {
+                            alert(data.message);
+                        }
+                    }
+                });
+            }
+        });
+    })
+</script>

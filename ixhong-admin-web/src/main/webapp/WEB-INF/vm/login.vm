@@ -1,0 +1,156 @@
+#set($title = "管理员登录")
+#set($layout = "/layout/empty.vm")
+
+<div class="head_cont conboxs">
+    <div class="top conbox">
+        <img src="/images/manage_.png">
+    </div>
+</div>
+<div class="loginbox bd otherhw">
+    <div class="login-pic otherpic">
+        <img src="/images/backstage.png" />
+    </div>
+    <div class="login">
+        <form id="log_form">
+            <div id="login_Message"  style="color: #6B6B6B;border: 2px solid #FF8080;line-height: 18px;padding: 2px 10px 2px 2px;display:none">
+                <img src="/images/warning.png" style="display:inline" width="15px" height="13px"/> <p id="mind_tip" style="display: inline"></p>
+            </div>
+            <div class="item ">
+                <input type="text" class="text" name="name" id="username" placeholder="用户名" />
+                <div class="i-name ico"></div>
+                <div class="message"></div>
+            </div>
+            <div id="user_name_tip" class="txt " style="display:none"><img src="images/warning.png"  width="15px" height="13px" />用户名不能为空
+            </div>
+            <div class="item ">
+                <input type="password" class="text" name="password" id="password" placeholder="密码" />
+                <div class="i-pwd ico"></div>
+                <div class="message"></div>
+            </div>
+            <div class="txt " style="display:none" id="user_password_tip" ><img src="/images/warning.png"  width="15px" height="13px" /> 密码不能为空
+            </div>
+            <div class="item ">
+                <input type="text" class="text" name="validate_code" id="vericode" placeholder="验证码" style="width:80px;" maxlength="4" />
+                <div class="i-pwd ico"></div>
+                <img style="cursor:pointer;vertical-align:middle; margin-left:5px" src="/get_validate_code.jhtml" alt="点击刷新" onclick="changeValidateCode(this)" id="valicode">
+            </div>
+            <div class="txt"  id="code_message" style="display: none">
+                <img src="images/warning.png"  width="15px" height="13px" /> 验证码错误
+            </div>
+            <div class="txt " id="validate_code_tip" style="display: none">
+                <img src="images/warning.png"  width="15px" height="13px" /> 验证码不能为空
+            </div>
+            <div class="btn">
+                <input type="button" value="登录" id="log_sub" class="btn-login" style="width:270px;"/>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 底部公共页开始 -->
+<div class="footer">
+    <div class="footerbox">
+        <p>客服电话 400-018-0670      机构合作联系邮箱 bd@xuehaodai.com</p>
+        <p class="otherp">copyright &copy;2015 北京学好贷信息技术有限公司版权所有    京ICP备15013722号</p>
+    </div>
+</div>
+
+<script>
+
+
+
+
+
+    $(function() {
+        $('#username').bind('focus', function() {
+            $("#user_name_tip").hide();
+            $("#login_Message").hide();
+        }).bind('blur', function() {
+            if (this.value == '') {
+                $("#user_name_tip").show();
+            } else {
+                $("#user_name_tip").hide();
+            }
+        });
+
+        $('#password').bind('focus', function() {
+            $("#user_password_tip").hide();
+            $("#login_Message").hide();
+        }).bind('blur', function() {
+            if (this.value == '') {
+                $("#user_password_tip").show();
+            } else {
+                $("#user_password_tip").hide();
+            }
+        });
+
+        $('#vericode').bind('focus', function() {
+            $("#code_message").hide();
+            $("#validate_code_tip").hide();
+            $("#login_Message").hide();
+        }).bind('blur', function() {
+            if (this.value == '') {
+                $("#validate_code_tip").show();
+            } else {
+                $("#validate_code_tip").hide();
+            }
+        });
+
+        $('#log_sub').click(function() {
+            if($("#username").val().length == 0 ){
+                $("#user_name_tip").show();
+                return false;
+            } else {
+                $("#user_name_tip").hide();
+            }
+
+            if( $("#password").val().length == 0){
+                $("#user_password_tip").show();
+                return false;
+            } else {
+                $("#user_password_tip").hide();
+            }
+
+            if($("#vericode").val().length == 0){
+                $("#validate_code_tip").show();
+                $("#code_message").hide();
+                $("#login_Message").hide();
+                return false;
+            }  else {
+                $("#validate_code_tip").hide();
+            }
+
+            $.ajax({
+                url:'/login_action.jhtml',
+                type:'post',
+                data:$('#log_form').serialize(),
+                dataType:'json',
+                success:function(data) {
+                    if (data.code == 'S00000') {
+                        window.location.href="/organization/list.jhtml?status="+data.data.status;
+                    }else if(data.code == 'E00004'){
+                        $("#validate_code_tip").hide();
+                        $("#code_message").show();
+                        $("#valicode").attr("src","/get_validate_code.jhtml?"+(new Date()).getTime());
+                    }else if(data.code == 'E00006'){
+                        $("#login_Message").show();
+                        $("#mind_tip").html('');
+                        $("#mind_tip").append('您输入的密码和账户名不匹配，请重新输入');
+                        $("#login_Message").show();
+                        $("#password").val('');
+                        $("#valicode").attr("src","/get_validate_code.jhtml?"+(new Date()).getTime());
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error:function(data) {
+                    alert('系统繁忙，请稍后再试!');
+                }
+            });
+        });
+
+    })
+
+function changeValidateCode(obj) {
+    obj.src = "/get_validate_code.jhtml?"+(new Date()).getTime();
+}
+</script>

@@ -1,0 +1,40 @@
+.jg_head{background:#efede7;}
+.top{height:90px;width:980px;padding-top:25px;background:#fff;margin:0 auto;}
+.center{height:100%;width:100%;background:#efede7;}
+.member_reg {background: #fff;padding: 40px 0;border: 1px solid #eee;}
+.member_reg .main {width: 650px;margin: 0 auto;}
+.b90{margin-bottom:90px;}
+.conboxs{margin:0 auto;background:#fff;}
+.jg_label{display: inline-block;float: left;margin-right: 15px;text-align: right;width: 70px;font-size: 16px;line-height: 36px;color: #999;vertical-align: middle;}
+.jg_input{width:270px;height:40px;border:1px solid #dddddd;color:#dddddd;border-radius:2px;font-size:14px;}
+.reg_sub{width: 270px;height: 45px;display: inline-block;color: #fff;font: 20px/26px "Microsoft YaHei";text-align: center;padding: 6px 12px;border-radius: 3px;cursor: pointer;overflow: visible;background: #f39355;}
+.pw_strengths{width: 270px;margin: 10px 0px 0px 85px;height: 15px;background-color: #f6c4a2;position: relative;overflow: hidden;}
+.pw_letters span{display: inline;float: left;height: 15px;width: 89px;font-size: 12px;text-align: center;line-height: 15px;color: #FFF;border-right: 1px solid #FFF;}
+.reg_sub:hover {background: #4da67a;}
+.btn {width: 270px;height: 45px;margin: 10px auto 10px;padding-bottom: 5px;background: #e0864c;border-radius: 3px;}
+.btn:hover{background: #57bb89;}
+.other_pwd{padding-bottom:20px;}
+.footerbox{height:150px;width:470px;margin:0 auto;font-size:14px;margin-top:35px;color:#71788c;}
+.footerbox p.otherp{font-size:12px;margin-top:10px;}
+.otherpic{float:left;}
+.otherhw{width:890px;height:390px;}
+.login .itemb input{margin-top:20px;width: 225px;height: 40px;line-height: 40px;padding: 0 5px 0 40px;color: #565555;background: #f9f8f5;border: 1px solid #ccc;border-radius: 3px;}.login .itembm input{width:110px;padding: 0 5px 0 10px;height: 40px;line-height: 40px;color: #565555;;background: #f9f8f5;border: 1px solid #ccc;border-radius: 3px;}
+.login .itemb .ico {width: 44px;height: 44px;background:url(../images/icon_index.png) no-repeat 0 0;position: absolute;top: 12px;left: 0px;}
+.login .itemb{position:relative;}
+.login .itemb .i-name {background-position: 9px -173px;}
+.login .itemb .i-pwd {background-position: 9px -223px;}
+.login .item{position:relative;}
+.login .item .puerror{background-position: -30px -100px;}
+.login .puerror{width:270px;height:25px;border:1px solid #000;font-size:12px;color:#ff9450;line-height:25px;background:#fbf4ef;border:1px solid #fde1cf;margin-bottom:-10px;display:none;}
+.login .puerror img{width:15px;height:15px;vertical-align:middle;margin:0 5px 0 5px;}
+.pend_box{margin:0 auto;width:907px;height:459px;position: relative;background:url(../images/pend_07.png);margin:50px auto 80px;}
+.pend_box .pend_boxs{position:absolute;top:269px;left:250px;}
+.pend_other .text{position:absolute;top:269px;left:280px;}
+.pend_box .text{width:460px;height:40px;font-size:13px;color:#ccc;}
+.pend_boxs b{font-weight:bold;color:#000;font-size:14px;}
+.pend_other{margin:0 auto;width:892px;height:452px;position: relative;background:url(../images/email_boxs.png);margin:50px auto 80px;}
+.pend_other .text{width:350px;height:40px;line-height:20px;color:#565555;font-size:13px;}
+.pend_other .text span{color:#f39355;padding:0 5px 0 5px;}
+.regsiter .otherbtn{position:absolute;top:269px;left:250px;}
+.acquiesce{width:410px;height:30px;line-height:30px;background:#fff5e8 url(../images/teacher.png) no-repeat 10px center;margin:0 auto ;margin-top:30px;margin-bottom:30px;color:#fbb151;padding-left:20px;}
+.acquiesce span{color:#f86714;}

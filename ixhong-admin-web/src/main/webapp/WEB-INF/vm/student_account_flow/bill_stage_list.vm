@@ -1,0 +1,60 @@
+#set($title = "学生还款计划")
+<body>
+<div class="content">
+    <div class="titles">
+        <p>学生交易计划><span>还款计划</span></p>
+        </p>
+    </div>
+    <div class="querybox">
+        <form id="getList" action="/student_account_flow/bill_stage_list.jhtml" method="post">
+            <label>姓名</label>
+            <input type="text" class="classname" name="studentName" value="$!{query.studentName}" id="teachername" />
+            <label>手机号</label>
+            <input type="text" class="classname" name="phone" value="$!{query.phone}" id="classname" />
+            <input type="submit" class="jgbut" id="jgbut" value="搜索" style="cursor: pointer;"/>
+        </form>
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td class="alignleft">学生姓名</td>
+            <td>学生手机号</td>
+            <td>机构名称</td>
+            <td>还款期数</td>
+            <td>最迟还款日</td>
+            <td>应还金额</td>
+            <td>还款状态</td>
+            <td>还款日期</td>
+            <td>逾期天数</td>
+            <td>逾期费用(元))</td>
+        </tr>
+        #foreach($billStage in $billStages)
+            <tr>
+                #set($amount = $!billStage.amount + $!billStage.fee + $!billStage.overdueFee)
+                <td>$!billStage.studentName</td>
+                <td>$!billStage.phone</td>
+                <td>$!billStage.organizationName</td>
+                <td>$!billStage.stage/$!billStage.totalStage</td>
+                <td>$!dateFormatUtils.format($!billStage.deadline,'yyyy-MM-dd')</td>
+                <td><td>$numberFormatUtils.format($!amount, 2)</td></td>
+                <td>
+                    #foreach($status in $!statusEnums)
+                                #if($status.code == $billStage.status)
+                        $status.meaning
+                                #end
+                    #end
+                </td>
+                <td>
+                    #if($!billStage.repaymentDate)
+                        $!dateFormatUtils.format($!billStage.repaymentDate,'yyyy-MM-dd')
+                    #else
+                        ------
+                    #end
+                </td>
+                <td>$!billStage.overdueDays</td>
+                <td>$!billStage.overdueFee</td>
+            </tr>
+        #end
+    </table>
+    #pagination("/student_account_flow/bill_stage_list.jhtml?$!{query.queryString()}" $!queryResult)
+</div>
+</body>

@@ -1,0 +1,124 @@
+#set($title = "机构提现流水记录")
+<div class="content">
+    <div style-"width:1009px">
+    <div class="titles">
+        <p>机构管理 > <span>提现审核</span></p>
+    </div>
+    <div class="cle"></div>
+    <div class="querybox" >
+        <form id="withdraw_list_form" method="post" action="/organization/withdraw_list.jhtml">
+            <div class="txt_lf">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <select name="status" class="">
+                    <option value="-1" >全部提现状态</option>
+                    #foreach($!statusEnum in $!statusEnums)
+                        <option value="$!statusEnum.code" #if($!statusEnum.code == $!query.status) selected="selected" #end>$!statusEnum.meaning</option>
+                    #end
+                </select>
+                <label class="label_time txt_rg">机构名称</label>
+                <input type="text"   name="organization_name" id="org_name" value="$!query.organizationName" />
+                <label class="label_time txt_rg">机构编号</label>
+                <input type="text"   name="organization_code" id="org_code" value="$!query.organizationCode" />
+                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="label_time txt_rg">申请时间</label>
+                <input type="text" id="classname" class="lay_date" style="margin-right:10px;"
+                       name="begin_date" value='$!query.queryBeginDate' onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){  }});" readonly="readonly" />
+                <em>到</em>
+                <input type="text" id="" class="lay_date" name="end_date" value='$!query.queryEndDate'
+                       onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){}});" readonly="readonly" />
+                <input type="submit"  class="jgbut" id="jgbut" value="搜索">
+            </div>
+        </form>
+    </div>
+    <span style="color:red;">*只支持工作日早9点到晚18点打款！</span>
+    <table class="table1">
+        <tr class="headline">
+            <td>机构名称</td>
+            <td>机构编号</td>
+            <td>提现金额</td>
+            <td>手续费</td>
+##            <td>提现前余额</td>
+            <td>状态</td>
+            <td>申请时间</td>
+            <td>处理时间</td>
+            <td>操作</td>
+        </tr>
+
+        #foreach($!organizationWithdraw in $!organizationWithdraws)
+            <tr>
+                <td>
+                    $!organizationWithdraw.organizationName
+                </td>
+                <td>$!organizationWithdraw.organizationCode</td>
+                <td>$!organizationWithdraw.amount</td>
+                <td>2.0</td>
+##                <td>$!organizationWithdraw.balance</td>
+                <td>
+                    #foreach($!statusEnum in $!statusEnums)
+                        #if($!statusEnum.code == $organizationWithdraw.status)
+                            $!statusEnum.meaning
+                        #end
+                    #end
+                </td>
+                <td>$!dateFormatUtils.format($!organizationWithdraw.created,'yyyy-MM-dd HH:mm')</td>
+                <td>
+                    #if($organizationWithdraw.status != $!auditing)
+                        $!dateFormatUtils.format($!organizationWithdraw.modified,'yyyy-MM-dd HH:mm')
+                    #end
+                </td>
+                <td>
+                    #if($organizationWithdraw.status == $!auditing)
+                        <a href="javascript:_comfirm($!organizationWithdraw.id, $!auditingSuccess, '确认通过？')">通过</a>
+                        <a href="javascript:_comfirm($!organizationWithdraw.id, $!auditingFailed, '确认拒绝？')">拒绝</a>
+                    #end
+              </td>
+            </tr>
+        #end
+    </table>
+</div>
+#pagination("/organization/withdraw_list.jhtml?$!{query.queryString()}" $!queryResult)
+<input type="hidden" value="$!{query.queryString()}" id="queryString">
+
+
+<input type="hidden" id="yes" value="$!auditingSuccess"/>
+<input type="hidden" id="no" value="$!auditingFailed"/>
+<script language="javascript" type="text/javascript">
+    function _comfirm(id, status, prompt) {
+        if (status == $('#yes').val()) {
+            var now = new Date();
+            var day = now.getDay();
+            var hour = now.getHours();
+            if (day == 0 || day == 6 || hour >= 18 || hour < 9) {
+                alert('只支持工作日早9点到晚18点打款！');
+                return;
+            }
+        }
+        var confirm_ = confirm(prompt);
+        if (confirm_) {
+            $.ajax({
+                url: '/organization/audit_withdraw.jhtml?id=' + id + "&status=" + status,
+                type: "GET",
+                async: true,
+                data: '',
+                dataType: "json",
+                success: function (data) {
+                    if (data.code == 'S00000') {
+                        if (status == data.data.auditingSuccess) {
+                            alert(data.message);
+                        } else {
+                            alert('操作成功');
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                    window.location.href = '/organization/withdraw_list.jhtml?' + $("#queryString").val();
+                },
+                error: function () {
+                    alert('网络异常，请重新操作');
+                }
+            });
+        }
+    }
+
+
+</script>

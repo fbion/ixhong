@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudentEducationMapper">
+    <resultMap type="StudentEducationDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="university" property="university"/>
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="college" property="college"/>
+        <result column="major" property="major"/>
+        <result column="status" property="status"/>
+        <result column="degree" property="degree"/>
+        <result column="begin_date" property="beginDate"/>
+        <result column="end_date" property="endDate"/>
+        <result column="certifier" property="certifier"/>
+        <result column="certifier_phone" property="certifierPhone" />
+        <result column="certificate_image" property="certificateImage"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+      id,student_id,university,province,city,college,major,`status`,degree,begin_date,end_date,certifier,
+      certifier_phone,certificate_image,created,modified
+	</sql>
+
+    <select id="getByStudentId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_education where student_id = #{value} limit 1
+    </select>
+
+    <insert id="insert" parameterType="StudentEducationDO">
+        insert into xhd_student_education(student_id,university,province,city,college,major,`status`,degree,begin_date,end_date,certifier,certifier_phone,certificate_image,created,modified)
+        values(#{studentId},#{university},#{province},#{city},#{college},#{major},#{status},#{degree},#{beginDate},#{endDate},#{certifier},#{certifierPhone},#{certificateImage},NOW(),NOW())
+    </insert>
+
+    <update id="update" parameterType="StudentEducationDO">
+        update xhd_student_education
+        set  university = #{university},
+        province = #{province},
+        city = #{city},
+        college=#{college},
+        major = #{major},
+        `status` = #{status},
+        degree = #{degree} ,
+        begin_date = #{beginDate},
+        end_date = #{endDate},
+        certifier = #{certifier},
+        certifier_phone = #{certifierPhone},
+        certificate_image = #{certificateImage},
+        modified = NOW()
+        where student_id=#{studentId}
+    </update>
+
+</mapper>

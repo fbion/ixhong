@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>$!{title} - 管理后台 - 学好贷</title>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="/css/public.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/css/kkpager_orange.css" />
+    <script src="/lib/jquery-1.8.2.min.js"></script>
+    <script src="/lib/jquery.form.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/lib/laydate.js"></script>
+    <script src="/lib/jquery.uploadify.js"></script>
+    <script src="/lib/jquery.form.js"></script>
+    <link href="/js/umeditor1_2_2/themes/default/css/umeditor.css" type="/js/umeditor1_2_2/text/css" rel="stylesheet">
+</head>
+
+<body>
+<!--头部-->
+    #parse("/include/header.vm")
+<!--主体-->
+<div class="container">
+    <div class="navs" id="nav">
+        <ul>
+            <li class="ww">
+                <a href="#" class="style1 manage">机构管理</a>
+                <ul>
+                    <li>
+                        <a href="/organization/list.jhtml?status=$!status">机构资质审核</a>
+                    </li>
+                    <li>
+                        <a href="/course/list.jhtml">课程审核</a>
+                    </li>
+                    <li>
+                        <a href="/operations_log/audit_list.jhtml">审核日志</a>
+                    </li>
+                    <li>
+                        <a href="/organization/withdraw_list.jhtml">提现审核</a>
+                    </li>
+                    <li>
+                        <a href="/organization/withdraw_query.jhtml">提现查询</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="ww">
+                <a href="#" class="style1 borrowaudit">借款审核</a>
+                <ul>
+                    <li>
+                        <a href="/student/list_bidding.jhtml?status=20">发标审核</a>
+                    </li>
+                    <li>
+                        <a href="/student/list_full_bidding.jhtml?status=40">满标审核</a>
+                    </li>
+                    <li>
+                        <a href="#">审核日志</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="ww">
+                <a href="#" class="style1 productcenter">产品中心</a>
+                <ul>
+                    <li>
+                        <a href="/interest_rate/list.jhtml">期限与利率</a>
+                    </li>
+                    <li>
+                        <a href="/fee/list.jhtml">平台收费</a>
+                    </li>
+                    <li>
+                        <a href="/student/list_ongoing_bidding.jhtml">流标延期</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="ww">
+                <a href="#" class="style1 studentdeal">学生交易记录</a>
+                <ul>
+                    <li>
+                        <a href="/student_account_flow/recharge_list.jhtml">充值记录</a>
+                    </li>
+                    <li>
+                        <a href="/student_account_flow/repaid_list.jhtml">还款记录</a>
+                    </li>
+                    <li>
+                        <a href="/student_account_flow/bill_stage_list.jhtml">还款计划</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="ww">
+                <a href="#" class="style1 lendermanager">投资人管理</a>
+                <ul>
+                    <li>
+                        <a href="/lender/list.jhtml">用户管理</a>
+                    </li>
+                    <li>
+                        <a href="/lender/bidding_item_list.jhtml">投资记录</a>
+                    </li>
+                    <li>
+                        <a href="/lender/flow_list.jhtml">交易记录</a>
+                    </li>
+                    <li>
+                        <a href="/lender/unbind_bank_card.jhtml">解绑银行卡</a>
+                    </li>
+##                    <li>
+##                        <a href="/lender/refund.jhtml">退款</a>
+##                    </li>
+                </ul>
+            </li>
+##            <li>
+##                <a href="#" class="style1 plans">催收计划</a>
+##            </li>
+##            <li>
+##                <a href="#" class="style1 centernews">消息中心</a>
+##            </li>
+            <li class="ww">
+                <a href="#" class="style1 adminmanager">平台管理</a>
+                <ul>
+                    <li>
+                        <a href="/account/flow_list.jhtml">收支记录</a>
+                    </li>
+                    <li>
+                        <a href="/article/notice_list.jhtml">最新公告</a>
+                    </li>
+                    <li>
+                        <a href="/article/media_list.jhtml">媒体报告</a>
+                    </li>
+                    <li>
+                        <a href="/links/list.jhtml">友情链接</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="main" id="main">
+        $screen_content
+    </div>
+
+</div>
+</body>
+</html>

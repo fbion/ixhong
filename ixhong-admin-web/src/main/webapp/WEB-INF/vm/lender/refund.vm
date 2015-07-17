@@ -1,0 +1,47 @@
+#set($title = "退款")
+
+<form id="refund_form">
+    易宝流水号：<input type="text" id="yeepay_order_id" name="yeepay_order_id" value="" style="width:200px;"/><br><br>
+    金额：<input type="text" id="amount" name="amount" value="" style="width:200px;"/><br><br>
+    退款说明：<input type="text" id="cause" name="cause" value="" style="width:200px;"/><br><br>
+    <input type="button" id="btn" value="退款">&nbsp;&nbsp;&nbsp;<input type="button" id="btn2" value="查询">
+</form>
+
+<script>
+    function check() {
+        if ($('#yeepay_order_id').val() == '' || $('#amount').val() == '' || $('#cause').val() == '') {
+            alert('请输入相关值');
+            return false;
+        }
+        return true;
+    }
+
+    $(function() {
+        $('#btn').click(function() {
+
+            if (check()) {
+                $.ajax({
+                    type:'post',
+                    url:'/lender/refund_action.jhtml',
+                    data:$('#refund_form').serialize(),
+                    dataType:'json',
+                    success:function(data) {
+                        alert(data.message);
+                    }
+                });
+            }
+        });
+
+        $('#btn2').click(function() {
+            $.ajax({
+                type:'post',
+                url:'/lender/query_refund.jhtml',
+                data:{yeepay_order_id:$('#yeepay_order_id').val()},
+                dataType:'json',
+                success:function(data) {
+                    alert(data.message);
+                }
+            });
+        });
+    })
+</script>

@@ -1,0 +1,55 @@
+#set($title = "投资人列表")
+<div class="content">
+    <div style-"width:1009px">
+    <div class="titles">
+        <p>投资人管理 > <span>用户管理</span></p>
+    </div>
+    <!--  -->
+    <div class="querybox" >
+        <form id="lender_form" method="post" action="/lender/list.jhtml">
+            <div class="txt_lf">
+                <label class="label_time">注册时间</label>
+                <input type="text" id="classname" class="lay_date" style="margin-right:10px;"
+                       name="begin_date" value='$!query.queryBeginDate' onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){  }});" readonly="readonly" />
+                <em>到</em>
+                <input type="text" id="" class="lay_date" name="end_date" value='$!query.queryEndDate'
+                       onclick="laydate({ format: 'YYYY-MM-DD',festival: true,  choose: function(datas){}});" readonly="readonly" />
+            </div>
+            <div class="txt_lf t10">
+                <label class="label_time">投资人用户名</label>
+                <input type="text"id="" class="aaa" name="name" value="$!query.name">
+                <label class="label_time">投资人手机号</label>
+                <input type="text" id="" class="aaa" name="phone" value="$!query.phone">
+                <label class="label_time">投资人认证实名</label>
+                <input type="text" id="" class="aaa" name="real_name" value="$!query.realName">
+                <input type="submit"  class="jgbut" id="jgbut" value="搜索">
+            </div>
+        </form>
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td class="alignleft">投资人用户名</td>
+            <td>手机号</td>
+            <td>认证实名</td>
+            <td>注册时间</td>
+            <td>流动资金金额</td>
+            <td>冻结金额</td>
+            <td>持有投资项目数</td>
+            <td>持有中本金</td>
+            <td>查看记录</td>
+        #foreach($!lender in $!lenders)
+            <tr>
+                <td>$!lender.name</td>
+                <td>$!lender.phone</td>
+                <td>$!lender.realName</td>
+                <td>$!lender.created</td>
+                <td>$!lender.balance</td>
+                <td>$!lender.balanceFrozen</td>
+                <td>$!lender.biddingCount</td>
+                <td>$!lender.principal</td>
+                <td><a href="/lender/bidding_item_list.jhtml?phone=$!lender.phone">投资</a> <a href="/lender/flow_list.jhtml?id=$!lender.id">交易</a></td>
+            </tr>
+        #end
+    </table>
+</div>
+#pagination("/lender/list.jhtml?$!{query.queryString()}" $!queryResult)

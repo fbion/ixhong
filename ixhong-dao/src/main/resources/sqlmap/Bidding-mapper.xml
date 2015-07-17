@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BiddingMapper">
+    <resultMap type="BiddingDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="student_name" property="studentName"/>
+        <result column="student_phone" property="studentPhone"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="teacher" property="teacher"/>
+        <result column="course_id" property="courseId"/>
+        <result column="course_name" property="courseName"/>
+        <result column="paid" property="paid"/>
+        <result column="required" property="required"/>
+        <result column="obtained" property="obtained"/>
+        <result column="process" property="process"/>
+        <result column="repaid" property="repaid"/>
+
+        <result column="month_limit" property="monthLimit"/>
+        <result column="rate" property="rate" />
+        <result column="grace_period" property="gracePeriod"/>
+        <result column="grace_rate" property="graceRate"/>
+        <result column="month_rate" property="monthRate"/>
+        <result column="fee_rate" property="feeRate"/>
+
+        <result column="interest" property="interest"/>
+        <result column="course_end_date" property="courseEndDate"/>
+        <result column="contract_image" property="contractImage"/>
+        <result column="status" property="status"/>
+        <result column="bail_percentage" property="bailPercentage"/>
+        <result column="version" property="version"/>
+        <result column="effective" property="effective" />
+        <result column="invalid_date" property="invalidDate" />
+        <result column="repay_begin_date" property="repayBeginDate"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,student_id,student_name,student_phone,organization_id,organization_name,teacher,course_id,course_name,paid,invalid_date,repay_begin_date,
+		required,obtained,process,repaid,month_limit,rate,grace_period,grace_rate,month_rate,fee_rate,interest,course_end_date,contract_image,`status`,bail_percentage,effective,`version`,created,modified
+	</sql>
+
+    <insert id="insert" parameterType="BiddingDO">
+        INSERT INTO xhd_bidding(student_id,student_name,student_phone,organization_id,organization_name,teacher,course_id,course_name,paid,
+        required,obtained,repaid,month_limit,rate,grace_period,grace_rate,month_rate,fee_rate,
+        course_end_date,interest,repay_begin_date,`status`,bail_percentage,effective,created,modified)
+        VALUES (#{studentId},#{studentName},#{studentPhone},#{organizationId},#{organizationName},#{teacher},#{courseId},#{courseName},#{paid},
+        #{required},#{obtained},#{repaid},#{monthLimit},#{rate},#{gracePeriod},#{graceRate},#{monthRate},#{feeRate},
+        #{courseEndDate},#{interest},#{repayBeginDate},#{status},#{bailPercentage}, 1,NOW(),NOW())
+    </insert>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_bidding WHERE id = #{value} limit 1
+    </select>
+
+    <sql id="query">
+
+        <if test="beginDate != null and endDate != null">
+            and `created` BETWEEN #{beginDate} AND #{endDate}
+        </if>
+
+        <if test="studentName != null">
+            and student_name LIKE binary concat('%', #{studentName}, '%')
+        </if>
+        <if test="studentPhone != null">
+            and student_phone = #{studentPhone}
+        </if>
+        <if test="courseName != null">
+            and course_name LIKE binary concat('%', #{courseName}, '%')
+        </if>
+        <if test="organizationName != null">
+            and organization_name LIKE binary concat('%', #{organizationName}, '%')
+        </if>
+        <if test="effective != null">
+            and effective = #{effective}
+        </if>
+
+
+        <if test="fromMonthLimit != null ">
+            AND month_limit >= #{fromMonthLimit}
+        </if>
+        <if test="toMonthLimit != null ">
+            <![CDATA[
+                 and `month_limit` <= #{toMonthLimit}
+            ]]>
+        </if>
+
+        <if test="fromProcess !=null ">
+                 and process  >= #{fromProcess}
+        </if>
+
+        <if test="toProcess != null ">
+            <![CDATA[
+                 and `process` <= #{toProcess}
+            ]]>
+        </if>
+
+        <if test="fromRate != null ">
+            <![CDATA[
+                 and `rate` >= #{fromProcess}
+            ]]>
+
+        </if>
+
+        <if test="toRate != null ">
+            <![CDATA[
+                 and `rate` <= #{toRate}
+            ]]>
+        </if>
+
+
+        <if test="status != null">
+            and status in
+            <foreach collection="status" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+    </sql>
+
+    <select id="countByStatus" resultType="java.lang.Integer">
+        select count(id) from xhd_bidding where organization_id = #{organizationId}
+        <if test="status != null">
+            and status in
+            <foreach collection="status" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_bidding where 1 = 1
+        <if test="organizationId != null">
+            AND organization_id = #{organizationId}
+        </if>
+        <include refid="query"/>
+    </select>
+
+    <select id="query" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_bidding where 1 = 1
+        <if test="organizationId != null">
+            AND organization_id = #{organizationId}
+        </if>
+        <include refid="query"/>
+
+        order by
+        <if test="processOrder != null ">
+            process ${processOrder} ,
+        </if>
+
+        <if test="amountOrder != null ">
+            required ${amountOrder} ,
+        </if>
+
+        <if test="monthLimitOrder != null">
+            month_limit ${monthLimitOrder} ,
+        </if>
+
+        `status` asc,invalid_date asc ,modified desc
+
+        limit #{startRow},#{pageSize}
+
+    </select>
+
+    <select id="getCurrentByStudentId" resultMap="defaultMap">
+        SELECT  <include refid="all"/> FROM xhd_bidding WHERE student_id = #{value} order by created desc  limit 1
+    </select>
+
+
+    <select id="list" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_bidding where effective = 1
+
+
+            and status in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+
+
+        ORDER BY status asc,modified desc  limit 4
+    </select>
+
+    <update id="update" parameterType="BiddingDO">
+      UPDATE xhd_bidding SET
+      `status` = #{status},
+      effective = #{effective},
+      contract_image = #{contractImage},
+      obtained = #{obtained},
+      process = #{process},
+      invalid_date = #{invalidDate},
+      repay_begin_date = #{repayBeginDate},
+      `version` = (`version` + 1),
+      modified = NOW()
+      where id = #{id} and `version` = #{version}
+    </update>
+
+    <update id="updateForRepayment" parameterType="BiddingDO">
+        UPDATE xhd_bidding SET
+        repaid = #{repaid},
+        effective = #{effective},
+        `version` = (`version` + 1),
+        `status` = #{status},
+        modified = NOW()
+        WHERE id = #{id} and student_id = #{studentId} and `version` = #{version}
+    </update>
+
+    <select id="getInvalidBidding" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_bidding where `status` = 30 and effective = 1
+        <![CDATA[
+            and invalid_date <= NOW() limit 15
+         ]]>
+    </select>
+
+</mapper>

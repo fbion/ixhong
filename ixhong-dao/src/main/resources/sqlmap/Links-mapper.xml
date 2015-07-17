@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LinksMapper">
+    <resultMap type="LinksDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="link" property="link"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,name,link,created,modified
+	</sql>
+
+    <insert id="insert">
+        INSERT INTO xhd_links (name,link,created,modified) VALUES (#{name}, #{link}, NOW(), NOW());
+    </insert>
+
+    <update id="update">
+        UPDATE xhd_links
+        SET name = #{name},
+        link = #{link},
+        modified = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="list" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_links
+    </select>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_links WHERE id = #{value}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM xhd_links WHERE id = #{VALUE}
+    </delete>
+</mapper>

@@ -1,0 +1,55 @@
+#set($title = "标的延期")
+<script src="/js/dialog.js"></script>
+<div class="content">
+    <div class="titles" style="margin-top:-28px;">
+        <p>产品中心><span>在投标列表</span></p>
+    </div>
+    <div class="querybox" style="width:100%;height: 50px;">
+        <form name="searchForm" action="/student/list_ongoing_bidding.jhtml" method="post">
+            <label>借款人姓名</label>
+            <input type="text" class="classname" id="student_name" name="student_name" value="$!query.studentName" />
+            <label>借款人手机号</label>
+            <input type="text" class="classname" id="student_phone" name="student_phone" value="$!query.studentPhone" />
+            <label>机构名称</label>
+            <input type="text" class="jgname" id="organization_name" name="organization_name" value="$!query.organizationName" />
+            <input type="submit" style="cursor: pointer;" class="jgbut" id="jgbut" value="搜索" />
+        </form>
+    </div>
+    <table class="table1" width="100%" style="margin-top: 20px;">
+        <tr class="headline">
+            <td>借款人姓名</td>
+            <td>手机号</td>
+            <td>机构名称</td>
+            <td>课程名称</td>
+            <td>借款金额（元）</td>
+            <td>借款期限（月）</td>
+            <td>宽恕期（月）</td>
+            <td>提交时间</td>
+            <td>流标时间</td>
+            <td>操作</td>
+        </tr>
+        #foreach( $bidding in $!biddings )
+            <tr>
+                <td>$!bidding.studentName</td>
+                <td>$!bidding.studentPhone</td>
+                <td>$!bidding.organizationName</td>
+                <td>$!bidding.courseName</td>
+                <td>$!bidding.required</td>
+                <td>$!bidding.monthLimit</td>
+                <td>$!bidding.gracePeriod</td>
+                <td>
+                    $!dateFormatUtils.format($!bidding.created,'yyyy-MM-dd')
+                </td>
+                <td>
+                    $!dateFormatUtils.format($!bidding.invalidDate,'yyyy-MM-dd HH:ss:MM')
+                </td>
+                <td>
+                    <a href="/student/detail.jhtml?id=$!bidding.id&student_id=$!bidding.studentId">查看</a>
+                    <a href="javascript:confirm('您确定要延期该标的三天吗？','/student/bidding_delay_action.jhtml?id=$bidding.id')" >标的延期</a>
+                </td>
+            </tr>
+        #end
+    </table>
+    #pagination("/student/list_ongoing_bidding.jhtml?$!{query.queryString()}" $!queryResult)
+</div>
+

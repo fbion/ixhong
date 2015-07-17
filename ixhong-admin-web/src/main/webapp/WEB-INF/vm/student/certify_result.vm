@@ -1,0 +1,32 @@
+#set($title = "身份认证结果")
+
+
+<div class="content">
+    <div class="titles">
+        <p>满标审核><span>实名认证结果</span></p>
+    </div>
+    <div class="course">
+        <div style="width:300px;margin:0 auto;height:500px;">
+            <table class="table2">
+                <tr><td style="width:180px">证件是否与姓名相符：</td><td style="width:50px"><span>
+                    #if ($!result == '00' || $!result == '10')
+                        是
+                    #else
+                        否
+                    #end
+                </span></td></tr>
+            #if ($!result == '00' && $score)
+                <tr><td style="width:180px">照片吻合度：</td><td style="width:50px"><span>$!score</span></td></tr>
+            #end
+            </table>
+            <table class="table2">
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" id="course_quit" value="返回列表" class="course_but" onclick="history.go(-2)"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

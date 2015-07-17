@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudentUsageMapper">
+    <resultMap type="StudentUsageDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="organization_code" property="organizationCode" />
+        <result column="teacher" property="teacher"/>
+        <result column="course_id" property="courseId"/>
+        <result column="paid" property="paid"/>
+        <result column="required" property="required"/>
+        <result column="month_limit" property="monthLimit"/>
+        <result column="rate" property="rate" />
+        <result column="grace_period" property="gracePeriod"/>
+        <result column="course_end_date" property="courseEndDate"/>
+        <result column="expected_title" property="expectedTitle"/>
+        <result column="expected_salary" property="expectedSalary"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,student_id,organization_id,organization_name,organization_code,teacher,course_id,paid,required,month_limit,rate,
+		grace_period,course_end_date,expected_title,expected_salary,created,modified
+	</sql>
+
+    <select id="insert" resultMap="defaultMap">
+        INSERT INTO xhd_student_usage (student_id,organization_id,organization_name,organization_code,teacher,course_id,paid,required,month_limit,rate,grace_period,
+        course_end_date,expected_title,expected_salary,created,modified)
+        VALUES (#{studentId},#{organizationId},#{organizationName},#{organizationCode},#{teacher},
+        #{courseId},#{paid},#{required},#{monthLimit},#{rate},#{gracePeriod},#{courseEndDate},#{expectedTitle},#{expectedSalary},NOW(),NOW())
+    </select>
+
+    <update id="update" parameterType="StudentUsageDO">
+        UPDATE xhd_student_usage SET student_id = #{studentId},
+        organization_id = #{organizationId},
+        organization_name = #{organizationName},
+        organization_code = #{organizationCode},
+        teacher = #{teacher},
+        course_id = #{courseId},
+        paid = #{paid},
+        required = #{required},
+        month_limit = #{monthLimit},
+        rate = #{rate},
+        grace_period = #{gracePeriod},
+        course_end_date = #{courseEndDate},
+        expected_title = #{expectedTitle},
+        expected_salary = #{expectedSalary},
+        modified = NOW()
+        where student_id=#{studentId}
+    </update>
+    
+    <select id="getByStudentId" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_student_usage where student_id = #{studentId} limit 1
+    </select>
+
+    <select id="getByStudentIds" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_student_usage where
+        student_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        limit 20
+    </select>
+
+</mapper>

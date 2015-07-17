@@ -1,0 +1,98 @@
+#set($title = "机构列表")
+
+<div class="content">
+    <div style="1009px;">
+    <div class="titles">
+        <p>机构管理 > <span>机构资质审核</span></p>
+    </div>
+    <form name="searchForm" id="searchForm" action="/organization/list.jhtml" method="post">
+    <div class="querybox">
+        <div class="sel" style="margin-left: 32px;">
+            <select name="status" class="homeselect">
+                <option value="-1" #if($!status.code == $!query.status) selected="selected" #end>全部审核状态</option>
+                #foreach($status in $!statusEnums)
+                    #if($!status.code > $!emailValidating)
+                        <option value="$!status.code" #if($!status.code == $!query.status) selected="selected" #end>$!status.meaning</option>
+                    #end
+                #end
+            </select>
+        </div>
+        <label>学校名称</label>
+        <input type="text" id="classname" name="name" value="$!query.name" class="aaa">
+        <label>学校编号</label>
+        <input type="text"id="jgname" name="code" value="$!query.code" class="aaa">
+        <label>注册邮箱</label>
+        <input type="text" id="emailname" name="email" value="$!query.email" class="aaa">
+        <input type="submit" class="jgbut" id="jgbut" value="搜索">
+    </div>
+    </form>
+    <!--<div class="agree">
+        <input type="button" class="agreebut" id="agreebut" value="通过">
+        <input type="button" class="nobut" id="nobut" value="拒绝通过">
+    </div>-->
+    <table class="table1">
+        <tr class="headline">
+            <td class="alignleft">学校名称</td>
+            <td>学校编号</td>
+            <td>审核状态</td>
+            <td>注册时间</td>
+            <td>保证金比例(%)</td>
+            <td>类别</td>
+            <td class="alignright">操作</td>
+        </tr>
+    #foreach($organizaiton in $!organizations)
+        <tr>
+            <td class="alignleft">
+                #if ($!organizaiton.status != $!notSubmited)
+                    <a href="/organization/detail.jhtml?organization_id=$!{organizaiton.id}" style="color:#7be2cb;">$!{organizaiton.name}</a>
+                #else
+                    $!{organizaiton.name}
+                #end
+            </td>
+            <td>
+                #if($!organizaiton.status == $!auditedSuccess)
+                    $!{organizaiton.code}
+                #else
+                    待设置
+                #end
+            </td>
+            <td>
+                #foreach($status in $!statusEnums)
+                    #if($!status.code == $!organizaiton.status)
+                        $!{status.meaning}
+                    #end
+                #end
+            </td>
+            <td>
+                $!dateFormatUtils.format($!organizaiton.created,'yyyy-MM-dd HH:mm')
+            </td>
+            <td>
+                #if($!stringUtils.isNotBlank($!organizaiton.bailPercentage))
+                    $!{organizaiton.bailPercentage}
+                #else
+                    待设置
+                #end
+            </td>
+            <td>
+                #foreach($e in $!levelEnums)
+                    #if($!e.code == $!organizaiton.level)
+                    $!{e.meaning}
+                #end
+                #end
+            </td>
+            <td class="alignright">
+                #if($!organizaiton.status == $!notSubmited)
+                    资料尚未提交
+                #elseif($!organizaiton.status == $!auditing)
+                    <a href="/organization/audit.jhtml?organization_id=$!{organizaiton.id}&$!{query.queryString()}&page=$!{query.getCurrentPage()}" style="color:#7be2cb;">审核</a>
+                #elseif($!organizaiton.status == $!auditedSuccess)
+                    <a href="/organization/update_bail_percent.jhtml?organization_id=$!{organizaiton.id}&$!{query.queryString()}&page=$!{query.getCurrentPage()}" style="color:#7be2cb;">修改审核结论</a>
+                #end
+            </td>
+        </tr>
+    #end
+    </table>
+    #pagination("/organization/list.jhtml?$!{query.queryString()}" $!queryResult)
+    </div>
+</div>
+

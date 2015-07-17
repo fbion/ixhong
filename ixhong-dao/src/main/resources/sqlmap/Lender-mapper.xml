@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LenderMapper">
+    <resultMap type="LenderDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="password" property="password"/>
+        <result column="real_name" property="realName"/>
+        <result column="card_id" property="cardId"/>
+        <result column="effective" property="effective"/>
+        <result column="login_time" property="loginTime"/>
+        <result column="certified" property="certified"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <resultMap type="LenderDO" id="joinMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="real_name" property="realName"/>
+        <result column="balance" property="balance"/>
+        <result column="balance_frozen" property="balanceFrozen"/>
+        <result column="principal" property="principal"/>
+    </resultMap>
+
+    <sql id="all">
+		id,phone,password,name,real_name,card_id,effective,login_time,certified,created,modified
+	</sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="LenderDO">
+         insert into xhd_lender(`name`,phone,password,effective,created,modified,login_time)
+         values(#{name},#{phone},MD5(#{password}),1,NOW(),NOW(),NOW())
+    </insert>
+
+
+    <select id="validate" resultMap="defaultMap">
+        select
+        <include refid="all"/>
+        from xhd_lender where (phone = #{phone} or `name` = #{phone}) and password = MD5(#{password}) limit 1
+    </select>
+
+    <select id="getByTelephone" resultMap="defaultMap">
+        select
+        <include refid="all"/>
+        from xhd_lender where phone = #{value} limit 1
+    </select>
+
+    <select id="getByName" resultMap="defaultMap">
+        select
+        <include refid="all"/>
+        from xhd_lender where `name` = #{value} limit 1
+    </select>
+
+    <update id="updatePasswordByPhone">
+        update xhd_lender set
+         password = MD5(#{password}),
+         modified = NOW()
+        where phone = #{phone}
+    </update>
+
+    <update id="updateLoginTime">
+         update xhd_lender set
+         login_time = NOW(),
+         modified = NOW()
+        where id = #{value}
+    </update>
+
+    <select id="getById" resultMap="defaultMap">
+        select
+        <include refid="all"/>
+        from xhd_lender where id = #{value} limit 1
+    </select>
+
+    <update id="updateCertified" parameterType="LenderDO">
+        UPDATE xhd_lender SET
+        certified = #{certified},
+        real_name = #{realName},
+        card_id = #{cardId},
+        modified = NOW()
+        where id = #{id}
+    </update>
+
+    <sql id="query">
+        <if test="beginDate != null and endDate != null">
+            and l.created BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        <if test="name != null">
+            and name = #{name}
+        </if>
+        <if test="phone != null">
+            and l.phone = #{phone}
+        </if>
+        <if test="realName != null">
+            and real_name = #{realName}
+        </if>
+    </sql>
+
+    <select id="query" resultMap="joinMap">
+        select l.id as id,
+        l.name as name,
+        l.phone as phone,
+        l.real_name as real_name,
+        l.created as created,
+        a.balance as balance,
+        a.balance_frozen as balance_frozen,
+        a.principal as principal
+        from xhd_lender l, xhd_lender_account a
+        where l.id = a.lender_id
+        <include refid="query"/>
+        order by l.created desc limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select COUNT(id) from xhd_lender l where 1 = 1
+        <include refid="query"/>
+    </select>
+
+    <select id="getLenderIds" resultType="java.lang.Integer">
+        select id from xhd_lender where 1 = 1
+        <if test="phone != null">
+            and phone = #{phone}
+        </if>
+        <if test="realName != null">
+            and real_name = #{realName}
+        </if>
+    </select>
+
+    <select id="getByCardId" resultMap="defaultMap">
+        select
+        <include refid="all"/>
+        from xhd_lender where card_id = #{value} limit 1
+    </select>
+</mapper>

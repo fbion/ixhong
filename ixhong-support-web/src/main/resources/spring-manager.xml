@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-autowire="byName">
+
+	<!-- 学生 manager -->
+	<bean id="studentManager" class="com.xhd.manager.impl.StudentManagerImpl"/>
+	<bean id="studentAccountManager" class="com.xhd.manager.impl.StudentAccountManagerImpl"/>
+	<bean id="studentAccountFlowManager" class="com.xhd.manager.impl.StudentAccountFlowManagerImpl"/>
+	<bean id="studentBillStageManager" class="com.xhd.manager.impl.StudentBillStageManagerImpl"/>
+	<!-- 标的 manager -->
+	<bean id="biddingManager" class="com.xhd.manager.impl.BiddingManagerImpl"/>
+	<bean id="biddingItemManager" class="com.xhd.manager.impl.BiddingItemManagerImpl"/>
+	<!-- 投资人 manager -->
+	<bean id="lenderManager" class="com.xhd.manager.impl.LenderManagerImpl"/>
+	<bean id="lenderAccountManager" class="com.xhd.manager.impl.LenderAccountManagerImpl"/>
+	<bean id="lenderAccountFlowManager" class="com.xhd.manager.impl.LenderAccountFlowManagerImpl"/>
+	<bean id="lenderBillStageManager" class="com.xhd.manager.impl.LenderBillStageManagerImpl" />
+	<!-- 机构、平台 manager -->
+	<bean id="organizationAccountManager" class="com.xhd.manager.impl.OrganizationAccountManagerImpl" />
+	<bean id="organizationAccountFlowManager" class="com.xhd.manager.impl.OrganizationAccountFlowManagerImpl" />
+	<bean id="accountFlowManager" class="com.xhd.manager.impl.AccountFlowManagerImpl"/>
+	<bean id="accountManager" class="com.xhd.manager.impl.AccountManagerImpl" />
+	<bean id="organizationWithdrawManager" class="com.xhd.manager.impl.OrganizationWithdrawManagerImpl" />
+</beans>

@@ -1,0 +1,82 @@
+#set($title = "期限与利率")
+<div class="content">
+    <div class="titles">
+        <p><span>期限与利率</span></p>
+    </div>
+    <div class="querybox">
+    <div class="agree">
+        <input type="button" style="cursor: pointer; width:auto; padding:0 7px 0 7px; margin-top: 60px; " class="nobut" id="nobut" value="新增利率与期限组合" onclick="newInterestRate()" />
+    </div>
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td>借款期限</td>
+            <td>利率</td>
+            <td>状态</td>
+            <td>开始生效时间</td>
+            <td>失效时间</td>
+            <td>操作</td>
+            <td>最后操作人</td>
+        </tr>
+        #foreach($interestRate in $!interestRates)
+            <tr>
+                <td>$!interestRate.monthLimit</td>
+                <td>$!interestRate.rate%</td>
+                <td>
+                    #if($!interestRate.effective == 1)
+                        当前生效
+                    #else
+                        历史记录
+                    #end
+                </td>
+                <td>
+                    $!dateFormatUtils.format($!interestRate.created,'yyyy-MM-dd HH:mm:ss')
+                </td>
+                <td>
+                    #if($!interestRate.effective == 1)
+                        生效中
+                    #else
+                        $!dateFormatUtils.format($!interestRate.modified,'yyyy-MM-dd HH:mm:ss')
+                    #end
+                </td>
+                <td>
+                    #if($!interestRate.effective == 1)
+                        <a href="javascript:disable_confirm($!interestRate.id)">失效</a>
+                    #else
+                        ___
+                    #end
+                </td>
+                <td>$!operator</td>
+            </tr>
+        #end
+    </table>
+</div>
+<script language="javascript" type="text/javascript">
+    function newInterestRate(){
+        window.location.href="/interest_rate/add.jhtml";
+    }
+    function disable_confirm(id) {
+        var confirm_ = confirm('确定要将该利率置为无效？');
+        if (confirm_) {
+            $.ajax({
+                url: '/interest_rate/disable.jhtml?id=' + id,
+                type: "GET",
+                async: true,
+                data: '',
+                dataType: "json",
+                success: function (data) {
+                    if (data.code == 'S00000') {
+                        alert("已失效");
+                    } else {
+                        alert(data.message);
+                    }
+                    window.location.href = data.data._redirect_url;
+                },
+                error: function () {
+                    alert(JSON.stringify(data));
+                }
+            });
+        }
+        return false;
+    }
+</script>

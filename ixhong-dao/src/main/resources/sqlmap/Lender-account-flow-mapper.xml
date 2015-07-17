@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LenderAccountFlowMapper">
+    <resultMap type="LenderAccountFlowDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="lender_id" property="lenderId"/>
+        <result column="lender_name" property="lenderName" />
+        <result column="lender_real_name" property="lenderRealName" />
+        <result column="phone" property="phone" />
+        <result column="order_id" property="orderId"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="recharge" property="recharge"/>
+        <result column="withdraw" property="withdraw"/>
+        <result column="balance_before" property="balanceBefore"/>
+        <result column="balance_after" property="balanceAfter"/>
+        <result column="frozen_before" property="frozenBefore" />
+        <result column="frozen_after" property="frozenAfter" />
+        <result column="course_name" property="courseName" />
+        <result column="student_name" property="studentName" />
+        <result column="current_stage" property="currentStage" />
+        <result column="total_stage" property="totalStage"/>
+        <result column="interest" property="interest" />
+        <result column="rate" property="rate"/>
+        <result column="principal" property="principal"/>
+        <result column="deadline" property="deadline"/>
+        <result column="repayment_date" property="repaymentDate" />
+        <result column="fee" property="fee"/>
+        <result column="bidding_id" property="biddingId"/>
+        <result column="bill_stage_id" property="billStageId"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="check_times" property="checkTimes"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="error_message" property="errorMessage"/>
+    </resultMap>
+    <sql id="all">
+        id,lender_id,`type`,order_id,lender_name,lender_real_name,phone,amount,recharge,withdraw,fee,
+        course_name,student_name,current_stage,total_stage,interest,rate,principal,deadline,repayment_date,
+        balance_before,balance_after,frozen_before,frozen_after,description,bidding_id,bill_stage_id,status,
+        check_times,created,modified,error_message
+    </sql>
+
+    <insert id="insert" parameterType="LenderAccountFlowDO">
+        insert into xhd_lender_account_flow(lender_id,order_id,`type`,status,amount,recharge,withdraw,fee,
+        current_stage,total_stage,rate,principal,lender_name,lender_real_name,phone,student_name,course_name,
+        balance_before,balance_after,frozen_before,frozen_after,bidding_id,bill_stage_id,description,check_times,
+        deadline,repayment_date,created,modified)
+        values(#{lenderId},#{orderId},#{type},#{status},#{amount},#{recharge},#{withdraw},#{fee},#{currentStage},
+        #{totalStage},#{rate},#{principal},#{lenderName},#{lenderRealName},#{phone},#{studentName},#{courseName},
+        #{balanceBefore},#{balanceAfter},#{frozenBefore},#{frozenAfter},#{biddingId},#{billStageId},#{description},
+        #{checkTimes},#{deadline},#{repaymentDate},NOW(),NOW())
+    </insert>
+
+    <select id="getByOrderId" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_lender_account_flow WHERE order_id = #{value} limit 1
+    </select>
+
+    <update id="update">
+        update xhd_lender_account_flow
+        set balance_before = #{balanceBefore},
+        balance_after = #{balanceAfter},
+        bidding_id = #{biddingId},
+        bill_stage_id = #{billStageId},
+        description = #{description},
+        status = #{status},
+        check_times = #{checkTimes},
+        modified = NOW()
+        where id = #{id} AND lender_id = #{lenderId}
+    </update>
+
+
+    <!--分页查询部分-->
+    <sql id="query">
+        <where>
+            <if test="lenderId != null">
+                and lender_id = #{lenderId}
+            </if>
+
+            <if test="lenderName != null">
+                and lender_name  like BINARY CONCAT('%', #{lenderName},'%')
+            </if>
+            <if test="lenderRealName != null">
+                and lender_real_name  like BINARY CONCAT('%', #{lenderRealName},'%')
+            </if>
+            <if test="lenderPhone != null">
+                and phone  like BINARY  CONCAT('%', #{lenderPhone},'%')
+            </if>
+            <if test="keyWord != null">
+                and student_name  like BINARY concat('%', #{keyWord},'%')
+            </if>
+
+            <if test=" type != null  and type != -1">
+                and type = #{type }
+            </if>
+
+            <if test="beginDate != null">
+                and  `created` >=#{beginDate}
+            </if>
+
+            <if test=" endDate != null">
+                <![CDATA[
+                      and SUBSTRING(`created`,1,10) <= #{endDate}
+                ]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="query" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_lender_account_flow
+        <include refid="query"/>
+        order by id DESC limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(o.id) from xhd_lender_account_flow o
+        <include refid="query"/>
+        order by id DESC
+    </select>
+
+    <select id="getByStatus" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_lender_account_flow
+        WHERE `status` = #{status}
+        AND type = #{type} limit 20
+    </select>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_lender_account_flow WHERE id = #{value} limit 1
+    </select>
+
+    <update id="updateStatus">
+        UPDATE xhd_lender_account_flow set status=0,error_message = #{errorMessage} where id = #{id}
+    </update>
+
+</mapper>

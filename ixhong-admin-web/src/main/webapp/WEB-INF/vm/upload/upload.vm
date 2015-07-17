@@ -1,0 +1,56 @@
+
+<div class="auth" style="margin-top:25px;">
+    <label class="auth_label"文件上传：</label>
+    <div class="ib">
+        <img src="/images/default.jpg" id="default" alt="" title="" style="float:left;margin:-17px 20px 0 0;"  width="60" height="60"/>
+        <div class="ifile-wrap">
+            <input class="ifile" type="file" name="file" id="file"  />
+            <em>上传</em>
+        </div>
+        <select id="type">
+            <option value="img">img</option>
+            <option value="file" selected>file</option>
+        </select>
+    </div>
+</div>
+
+
+
+<script language="javascript" type="text/javascript">
+$(function() {
+    $("#file").uploadify({
+        //是否自动上传
+        'auto':true,
+        //flash
+        'swf': '/lib/uploadify.swf?ver=' + Math.random(),
+        //上传处理程序
+        'uploader':'/upload/upload_action.jhtml',
+        'buttonText':'',
+        'formData': {type: 'file'},
+        //浏览按钮的宽度
+        'width':100,
+        //浏览按钮的高度
+        'height':'40',
+        'fileObjName':"file",
+        'hideButton':true,
+        'fileTypeExts':'*.jpg;*.png;*.jpeg;*.pdf;*.doc;*.docx;*.xls;*.xlsx;*.html;*.htm;*.bmp',
+        'fileDesc':'请选文件',
+        'fileSizeLimit':4096,
+        'onSelect': function (event, ID, fileObj) {
+            $('#default').attr("src", "/images/loading.gif");
+        },
+        'onUploadSuccess':function(file, data, response){
+            var _d = eval('('+data+')');
+            if (_d.code == 'S00000') {
+                var filename = _d.data.filename;
+                var path = "/ds/";
+                $('#default').attr("src", "http://" + $('#imgHost').val() + path + filename);
+                window.open("http://" + $('#imgHost').val() + path + filename);
+            } else {
+                alert(data.message);
+            }
+        }
+    });
+
+})
+</script>

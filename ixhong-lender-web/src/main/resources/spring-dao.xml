@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-autowire="byName">
+
+	<bean id="lenderDao" class="com.ixhong.dao.impl.LenderDaoImpl"/>
+	<bean id="biddingDao" class="com.ixhong.dao.impl.BiddingDaoImpl"/>
+	<bean id="yibaoCityDao" class="com.ixhong.dao.impl.YibaoCityDaoImpl"/>
+	<bean id="bankDao" class="com.ixhong.dao.impl.BankDaoImpl"/>
+	<bean id="lenderAccountDao" class="com.ixhong.dao.impl.LenderAccountDaoImpl"/>
+	<bean id="lenderAccountFlowDao" class="com.ixhong.dao.impl.LenderAccountFlowDaoImpl"/>
+	<bean id="biddingItemDao" class="com.ixhong.dao.impl.BiddingItemDaoImpl"/>
+	<bean id="studentDao" class="com.ixhong.dao.impl.StudentDaoImpl"/>
+	<bean id="studentUsageDao" class="com.ixhong.dao.impl.StudentUsageDaoImpl"/>
+	<bean id="studentEducationDao" class="com.ixhong.dao.impl.StudentEducationDaoImpl"/>
+	<bean id="studentBillStageDao" class="com.ixhong.dao.impl.StudentBillStageDaoImpl"/>
+	<bean id="studentBasicDao" class="com.ixhong.dao.impl.StudentBasicDaoImpl"/>
+	<bean id="lenderBillStageDao" class="com.ixhong.dao.impl.LenderBillStageDaoImpl"/>
+	<bean id="accountFlowDao" class="com.ixhong.dao.impl.AccountFlowDaoImpl"/>
+	<bean id="accountDao" class="com.ixhong.dao.impl.AccountDaoImpl"/>
+	<bean id="articleDao" class="com.ixhong.dao.impl.ArticleDaoImpl"/>
+	<bean id="linksDao" class="com.ixhong.dao.impl.LinksDaoImpl"/>
+</beans>

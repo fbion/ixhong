@@ -1,0 +1,59 @@
+#set($title = "添加利率")
+    <div class="course">
+        <form id="interestRateForm" name="courseForm" action="/interest_rate/add_action.jhtml" method="post">
+            <input type="hidden" name="token" value="$!{token}"/>
+            <table class="table2">
+                <tr>
+                    <td>借款期限</td>
+                    <td style="white-space:nowrap;">
+                        <input type="text" name="month_limit" id="month_limit" class="w150 numheight" style="margin-right: 10px;">
+                        <span class="msg_box warning"><font></font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>年化利率</td>
+                    <td style="white-space:nowrap;">
+                        <input type="text" name="rate" id="rate" class="w150 numheight" style="margin-right: 10px;">%
+                        <span class="msg_box warning"><font></font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">操作留言</td>
+                    <td>
+                        <textarea name="description" id="description" class="course_text" maxlength="512"></textarea>
+                        <span class="msg_box warning"><font></font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" name="course_firm" id="course_firm" value="确认添加" class="course_but course_butwidth"/><br/>
+                        <span id="message_span" style="color:red;font-weight:normal;font-size:small" ></span>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<script language="JavaScript" src="/js/interestRate.js"></script>
+
+<script>
+    $("#interestRateForm").submit(function() {
+        if(_check_month_limit('month_limit') && _check_rate('rate')) {
+            $(this).ajaxSubmit({
+                dataType:"json",
+                success:function(data) {
+                    if (data.code == 'S00000') {
+                        window.location.href=data.data._redirect_url;
+                    } else {
+                        $("#message_span").html(data.message);
+                    }
+                },
+                error:function(data) {
+                    alert("网络异常，请稍后再试");
+                }
+            });
+        }
+        return false;
+    });
+</script>

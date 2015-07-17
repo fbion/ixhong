@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudentAccountMapper">
+    <resultMap type="StudentAccountDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="balance" property="balance"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,student_id,balance,created,modified
+    </sql>
+
+    <insert id="insert" parameterType="StudentAccountDO">
+        insert into xhd_student_account(student_id,balance,created,modified)
+        values(#{studentId},#{balance},NOW(),NOW())
+    </insert>
+
+    <select id="getById" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_account where id = #{value} limit 1
+    </select>
+
+    <select id="getByStudentId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_account where student_id = #{value} limit 1
+    </select>
+
+    <select id="getByStudentIdForUpdate" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_account where student_id = #{value} limit 1 FOR UPDATE
+    </select>
+
+    <update id="update" parameterType="StudentAccountDO">
+        update xhd_student_account
+        set balance = #{balance},
+        modified = NOW()
+        where id = #{id}
+    </update>
+
+    <update id="updateBalance" parameterType="StudentAccountDO">
+        update xhd_student_account
+        set balance = #{balance},
+        modified = NOW()
+        where student_id = #{studentId}
+    </update>
+
+</mapper>

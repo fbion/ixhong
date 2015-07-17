@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CourseMapper">
+    <resultMap type="CourseDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="price" property="price"/>
+        <result column="total_months" property="totalMonths"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="audit_note" property="auditNote"/>
+        <result column="effective" property="effective"/>
+        <result column="month_limit" property="monthLimit"/>
+        <result column="grace_period" property="gracePeriod"/>
+        <result column="fee_rate" property="feeRate"/>
+        <result column="grace_rate" property="graceRate"/>
+        <result column="month_rate" property="monthRate"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <resultMap type="CourseDO" id="simpleMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="price" property="price"/>
+
+        <result column="total_months" property="totalMonths"/>
+        <result column="month_limit" property="monthLimit"/>
+        <result column="grace_period" property="gracePeriod"/>
+        <result column="fee_rate" property="feeRate"/>
+        <result column="grace_rate" property="graceRate"/>
+        <result column="month_rate" property="monthRate"/>
+
+        <result column="status" property="status"/>
+        <result column="effective" property="effective"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,name,organization_name,organization_id,price,total_months,description,`status`,audit_note,effective,
+		month_limit,grace_period,fee_rate,grace_rate,month_rate,created,modified
+	</sql>
+
+    <sql id="simple">
+        id,name,organization_name,organization_id,price,total_months,`status`,
+        month_limit,grace_period,fee_rate,grace_rate,month_rate,
+        effective,created,modified
+    </sql>
+
+    <insert id="insert" parameterType="CourseDO">
+        INSERT INTO xhd_course(name,organization_name,organization_id,price,total_months,description,`status`,effective,
+        month_limit,grace_period,fee_rate,grace_rate,month_rate,created,modified)
+        VALUES (#{name},#{organizationName},#{organizationId},#{price},#{totalMonths},#{description},#{status},#{effective},
+        #{monthLimit},#{gracePeriod},#{feeRate},#{graceRate},#{monthRate},NOW(),NOW())
+    </insert>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_course WHERE id = #{id} limit 1
+    </select>
+
+    <update id="disable">
+        UPDATE xhd_course SET effective = 0,`status` = 30 WHERE id = #{id}
+    </update>
+
+    <update id="update" parameterType="CourseDO">
+        UPDATE xhd_course SET
+        `status` = #{status},
+        month_limit = #{monthLimit},
+        grace_period = #{gracePeriod},
+        fee_rate = #{feeRate},
+        grace_rate = #{graceRate},
+        month_rate = #{monthRate},
+        audit_note = #{auditNote},
+        modified = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <sql id="query">
+        <if test="name != null">
+            AND name LIKE BINARY concat('%', #{name} ,'%')
+        </if>
+        <if test="organizationName != null">
+            AND organization_name LIKE BINARY concat('%', #{organizationName} ,'%')
+        </if>
+        <if test="status != null">
+            AND `status` = #{status}
+        </if>
+    </sql>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_course where 1 = 1
+        <if test="organizationId != null">
+            AND organization_id = #{organizationId}
+        </if>
+        <include refid="query"/>
+    </select>
+
+    <select id="query" resultMap="simpleMap">
+        SELECT <include refid="simple"/> from xhd_course where 1 = 1
+        <if test="organizationId != null">
+            AND organization_id = #{organizationId}
+        </if>
+        <include refid="query"/>
+        order by `status`,created desc limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="getByName" resultMap="simpleMap">
+        SELECT <include refid="simple"/> FROM xhd_course
+        WHERE organization_id = #{organizationId}
+        AND name = BINARY #{name}
+        AND status != 30 limit 1
+    </select>
+
+</mapper>

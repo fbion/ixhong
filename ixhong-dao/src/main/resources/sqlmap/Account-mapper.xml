@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AccountMapper">
+    <resultMap type="AccountDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="balance" property="balance"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="version" property="version"/>
+    </resultMap>
+
+    <sql id="all">
+        id,balance,created,modified,`version`
+    </sql>
+
+    <select id="get" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_account limit 1
+    </select>
+
+    <update id="update" parameterType="AccountDO">
+        update xhd_account set balance = #{balance},
+        `version` = (`version` + 1),
+        modified = NOW()
+        where id = #{id} and `version` = #{version}
+    </update>
+
+</mapper>

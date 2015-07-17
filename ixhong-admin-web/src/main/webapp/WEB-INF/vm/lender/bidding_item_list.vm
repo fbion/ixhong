@@ -1,0 +1,47 @@
+#set($title = "投资记录列表")
+<div class="content">
+    <div style-"width:1009px">
+    <div class="titles">
+        <p>投资人管理 > <span>投资记录</span></p>
+    </div>
+    <div class="querybox" >
+        <form id="investment_form" method="post" action="/lender/bidding_item_list.jhtml">
+            <label>投资人手机号</label>
+            <input type="text"id="jgname" class="aaa" name="phone" value="$!query.lenderPhone">
+            <label>认证实名</label>
+            <input type="text"id="" class="aaa" name="real_name" value="$!query.lenderRealName">
+            <input type="submit" class="jgbut" id="jgbut" value="搜索">
+        </form>
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td class="alignleft">投资人手机号</td>
+            <td>认证实名</td>
+            <td>投资项目名</td>
+            <td>投入本金</td>
+            <td>投标时间</td>
+            <td>年化收益率</td>
+            <td>已收期数/总期数</td>
+            <td>项目状态</td>
+        </tr>
+        #foreach($!biddingItem in $!biddingItems)
+            <tr>
+                <td>$!biddingItem.lenderPhone</td>
+                <td>$!biddingItem.lenderRealName</td>
+                <td>$!{biddingItem.studentName}_$!{biddingItem.courseName}</td>
+                <td>$!biddingItem.principal</td>
+                <td>$!dateFormatUtils.format($!biddingItem.created, "yyyy-MM-dd")</td>
+                <td>$!biddingItem.rate</td>
+                <td>$!{biddingItem.currentStage}/$!{biddingItem.totalStage}</td>
+                <td>
+                    #foreach($!biddingItemEnum in $!biddingItemEnums)
+                        #if($!biddingItemEnum.code == $!biddingItem.status)
+                            $!biddingItemEnum.meaning
+                        #end
+                    #end
+                </td>
+            </tr>
+        #end
+    </table>
+</div>
+#pagination("/lender/bidding_item_list.jhtml?$!{query.queryString()}" $!queryResult)

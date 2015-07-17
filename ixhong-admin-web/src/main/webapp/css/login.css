@@ -1,0 +1,34 @@
+﻿@charset "utf-8";
+/**************
+ login.css Document
+ Author:creamedged;
+ Edited Time:2015-02-13;
+***************/
+
+/***** login.css *****/
+.head_cont .txt {margin-top:25px; float:right; font-size:24px; color:#999}
+.head_cont .txt em {font-size:24px; color:#f2ede9}
+.loginbox {width:830px; height:330px; margin:60px auto 120px; padding:30px; background:#f9f8f5; overflow:hidden; }
+.login-pic {width:430px; height:330px; float:left; }
+.login {width:270px; float:left; margin:20px 0 0 100px; display:inline; }
+.login .item {margin:5px 0 20px 0;position:relative;}
+.login .item .ico{width:40px; height:40px; background:url(../images/icon_index.png) no-repeat 0 0; position:absolute; top:0; left:0;*top:2px; }
+.login .item .i-name{background-position:8px -184px}
+.login .item .i-pwd{background-position:8px -232px}
+.login .item input {width:225px; height:40px; *height:37px;*line-height:37px; line-height:40px; padding:0 5px 0 40px; background:#f9f8f5; border:1px solid #ccc; border-radius:3px;vertical-align:middle;}
+.login .item input:focus {color:#333}
+.login .item input.btn-login {width:250px; padding:0; line-height:37px; background:#f39355; color:#fff; font-size:20px; cursor:pointer; border-radius:3px;}
+.login .succes input {border:1px solid #aed3c0}
+.login .error input {border:1px solid #f39355; color:#f39355}
+.login .message {width:262px; height:20px; line-height:20px; padding:0 3px; color:#f39355; background:#fbf4ef;border:1px solid #fde1cf; display:none; }
+.login .error .message {display:block; }
+.login .txt {text-align:right; }
+.login .txt a {color:#999}
+.login .txt a:hover {color:#f39355; }
+.login .reg {text-align:center; color:#999}
+.login .reg a {color:#f39355}
+.login .reg a:hover {color:#f39355; }
+.btn{width:270px; height:45px; margin:10px auto 10px; padding-bottom:5px; background:#e0864c; border-radius:3px;}
+.btn:hover{background:#4da67a}
+.btn:hover input{background:#57bb89}
+.btn input {width: 270px; height:45px; display: inline-block;color: #fff;font: 20px/26px "Microsoft YaHei";text-align: center;padding: 6px 12px;border-radius: 3px;cursor: pointer;overflow: visible;background: #f39355;}

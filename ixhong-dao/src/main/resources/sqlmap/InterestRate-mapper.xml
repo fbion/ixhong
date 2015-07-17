@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InterestRateMapper">
+    <resultMap type="InterestRateDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="month_limit" property="monthLimit"/>
+        <result column="rate" property="rate"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="description" property="description"/>
+        <result column="effective" property="effective"/>
+    </resultMap>
+
+    <resultMap type="InterestRateDO" id="simpleMap">
+        <id column="id" property="id"/>
+        <result column="month_limit" property="monthLimit"/>
+        <result column="rate" property="rate"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="effective" property="effective"/>
+    </resultMap>
+
+    <sql id="all">
+        id,month_limit,rate,created,modified,description,effective
+    </sql>
+
+    <sql id="simple">
+        id,month_limit,rate,created,modified,effective
+    </sql>
+
+    <select id="list" resultMap="simpleMap">
+        select <include refid="simple"/> from xhd_interest_rate order by  effective desc,month_limit
+    </select>
+
+    <select id="getByMonthLimit" resultMap="simpleMap">
+        select <include refid="simple"/> from xhd_interest_rate where month_limit = #{VALUE} and effective = 1 limit 1
+    </select>
+
+    <select id="getById" resultMap="simpleMap">
+        select <include refid="simple"/> from xhd_interest_rate where id = #{VALUE} limit 1
+    </select>
+
+    <insert id="insert">
+        INSERT INTO xhd_interest_rate(month_limit, rate, description, created, modified, effective)
+        VALUES (#{monthLimit}, #{rate}, #{description}, NOW(), NOW(), 1)
+    </insert>
+
+    <update id="update" parameterType="java.lang.Integer">
+        update xhd_interest_rate
+        SET effective = 0, modified = NOW()
+        WHERE id = #{VALUE}
+    </update>
+</mapper>

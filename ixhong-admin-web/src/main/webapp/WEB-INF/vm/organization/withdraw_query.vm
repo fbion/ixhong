@@ -1,0 +1,44 @@
+#set($title = "机构提现查询")
+
+<form id="withdraw_query_form" action="" method="post">
+    <input type="hidden" name="token" value="$!token" />
+    商户订单号：<input type="text" id="order_id" name="order_id" value="" style="width:200px;"><br><br>
+    打款批次号：<input type="text" id="batch_no" name="batch_no" value="" style="width:200px;"><br>
+
+    <br><input type="button" id="query_btn" value="查 询"/>
+</form>
+
+
+<br>
+<span id="result"></span>
+
+<script>
+    $(function() {
+        $('#query_btn').click(function() {
+            $.ajax({
+                url:'/organization/withdraw_query_action.jhtml',
+                type:'post',
+                data:$('#withdraw_query_form').serialize(),
+                dataType:'json',
+                success:function(data) {
+                    var transferCode = data.data.transferCode;
+                    var bankStatus = data.data.bankStatus;
+                    var result = transferCode + ', ' + bankStatus;
+                    if (transferCode == '0025') {
+                        result = '已接收';
+                    } else if (transferCode == '0026' && bankStatus == 'I') {
+                        result = '银行处理中';
+                    } else if (transferCode == '0027') {
+                        result = '已退款';
+                    } else if (transferCode == '0028') {
+                        result = '已拒绝';
+                    }
+                    $('#result').html(result);
+                },
+                error:function(data) {
+                    alert('error');
+                }
+            });
+        });
+    })
+</script>

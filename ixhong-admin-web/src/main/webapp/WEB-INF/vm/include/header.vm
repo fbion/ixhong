@@ -1,0 +1,13 @@
+#set($title="头部")
+#set($layout = "layout/empty.vm")
+
+<!--头部-->
+<div class="head">
+    <div class="headleft">
+        <img src="/images/admin_logo.png" />
+    </div>
+    <div class="headright">
+        <p><span>$!loginUser.name</span> 您好！</p>
+        <p class="exit"><a href="/logout.jhtml">退出</a></p>
+    </div>
+</div>

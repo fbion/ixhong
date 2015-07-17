@@ -1,0 +1,86 @@
+<script type="text/javascript" src="/js/umeditor1_2_2/third-party/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/umeditor1_2_2/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/umeditor1_2_2/umeditor.js"></script>
+<script type="text/javascript" src="/js/umeditor1_2_2/lang/zh-cn/zh-cn.js"></script>
+<style type="text/css">
+    .table2 td:first-child {
+        width: 10px;
+    }
+    .content {
+        padding: 1px;
+    }
+
+    .table2 {
+        margin: 2px auto;
+    }
+</style>
+<div class="">
+    <div class="titles" style="text-align:left;padding-left:50px;">
+        <p>平台管理><span style="color:#7be2cb;">媒体报道>添加媒体报道></span></p>
+    </div>
+    <div class="course" style="width:1020px;margin-left:10px;">
+    <form id="mediaForm"  action="/article/add_action.jhtml" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="content" id="content" >
+        <input type="hidden" name="type" id="type" value="$!type">
+        <input type="hidden" name="token" value="$!token" >
+        <table class="table2">
+            <tr>
+                <td>标题</td>
+                <td >
+                    <input type="text" name="title" id="title"  style="margin-right: 60px; width: 800px;">
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+            <tr>
+                <td>摘要</td>
+                <td >
+                    <textarea name="summary" id="summary" style="width: 800px;height: 100px"></textarea>
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+            <tr>
+                <td >图片</td>
+                <td>
+                    <input type="file" name="file" id="file" ></input>
+                    <span class="msg_box warning"><font></font></span>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+</div>
+<!--style给定宽度可以影响编辑器的最终宽度-->
+<script type="text/plain" id="myEditor" style="width:1020px;height:240px;">
+</script>
+<input type="submit" name="media_firm" id="media_firm" value="确认添加" style="background: #1abc9c;display: block;padding: 9px 50px;color: #fff;margin: 20px auto;"/><br/>
+<script type="text/javascript">
+        //实例化编辑器
+       var um = UM.getEditor('myEditor');
+        um.execCommand('forecolor','#000');
+        um.focus();
+    $("#media_firm").on("click",function(e){
+        var title = $("#title").val();
+        var content = UM.getEditor('myEditor').getContent();
+        var summary = $("#summary").val();
+        if(title == '' || title == null ){
+            alert("请输入标题");
+            return false;
+        }
+        if(title.length >= 128){
+            alert("标题长度太长,请重新输入");
+            return false;
+        }
+        if(content == '' || content == null ){
+            alert("请输入内容");
+            return false;
+        }
+        if(summary.length >=256){
+            alert("摘要内容太长,请重新输入");
+            return false;
+        }
+        $("#content").val(content);
+
+        $("#mediaForm").submit();
+    });
+</script>

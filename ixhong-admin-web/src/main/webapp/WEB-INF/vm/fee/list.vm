@@ -1,0 +1,28 @@
+#set($title = "平台收费")
+<div class="content">
+    <div class="titles">
+        <p><span>平台收费</span></p>
+    </div>
+    <div class="querybox">
+        <div class="agree">
+        </div>
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td>费用名称</td>
+            <td>收费</td>
+            <td>付费方</td>
+        </tr>
+        #foreach($fee in $!fees)
+            <tr>
+                <td>$!fee.name</td>
+                <td>
+                    $!{fee.code}$!{fee.meaning}&nbsp;&nbsp;
+                </td>
+                <td>
+                    --
+                </td>
+            </tr>
+        #end
+    </table>
+</div>

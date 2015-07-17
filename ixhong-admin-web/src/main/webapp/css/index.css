@@ -1,0 +1,196 @@
+
+
+.user{
+	background: #fff;
+	margin-bottom: 25px;
+	padding: 50px;
+}
+.titles{
+	position: relative;
+	overflow: hidden;
+	height: 30px;
+	width:100%;
+}
+.pic{
+	background: #f1f9ff;
+	height: 170px;
+	margin-bottom: 25px;
+}
+.photo{
+	width: 100px;
+	height: 100px;
+	float: left;
+	margin-right: 40px;
+	padding-left: 33px;
+	padding-top: 33px;
+}
+.photo img{
+	border-radius: 50px;
+}
+.mess{
+	width: 500px;
+	height: 100px;
+	float: left;
+	padding-top: 33px;
+}
+.mess p{
+	line-height: 30px;
+	text-align: left;
+}
+.mess p a{
+	color: #3bb2d0;
+	text-decoration: none;
+}
+span.invariant{
+	font-size:13px;
+	color: #808080;
+}
+span.variant{
+	color: #404040;
+	font-size: 14px;
+}
+.leave{
+	height: 150px;
+}
+.model{
+	width: 270px;
+	height: 150px;
+	float: left;
+}
+.model dl{
+	width: 260px;
+	height: 35px;
+	line-height: 35px;
+	padding-left: 10px;
+	background: #56b881;
+	font-size: 16px;
+	color: #fff;
+}
+.model dl a{
+	float: right;
+	margin-right: 10px;
+	font-size: 13px;
+	text-decoration: none;
+	color: #9de4bc;
+}
+.model dl dd{
+	color: #808080;
+	font-size: 13px;
+	width: 260px;
+	height: 35px;
+	border-bottom: 1px solid #e4eff8;
+}
+
+.model dl dd .red{
+	color: #f9886c;
+}
+.model dl dd .black{
+	color: #404040;
+}
+.model dl dd a.tidan{
+	color: #e55e5e;
+	border: 1px solid #ec9090;
+	width: 80px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	display: inline-block;
+	margin-top: 4px;
+}
+.model dl dd a.tixian{
+	color: #64d3ef;
+	border: 1px solid #b9e7f3;
+	width: 80px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	display: inline-block;
+	margin-top: 4px;
+}
+.model dl dd a.xiugai{
+	color: #3987be;
+}
+.plan{
+	background: #fff;
+	margin-bottom: 25px;
+	padding: 50px;
+}
+.titles a{
+	color: #3987be;
+	float: right;
+	font-size: 12px;
+	text-decoration: none;
+}
+.plan table{
+	font-size: 13px;
+	color: #808080;
+}
+.plan table tr{
+	height: 30px;
+}
+.plan table td{
+	width: 130px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	padding: 5px;
+}
+.plan table td a{
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #9bd3b3;
+	text-align: center;
+	display: inline-block;
+	color: #9bd3b3;
+	text-decoration: none;
+}
+.plan table td a:hover{
+	background: #56b881;
+	color: #fff;
+}
+
+.add{
+	background: #f1f9ff;
+}
+
+.navs ul li a.manage{
+	background:url(../images/nav01.png) no-repeat;
+	background-position: 32px center;
+}
+
+.navs ul li a.plans{
+	background:url(../images/nav02.png) no-repeat;
+	background-position: 23px center;
+}
+
+.navs ul li a.centernews{
+	background: url(../images/nav03.png) no-repeat;
+	background-position: 23px center;
+}
+
+.navs ul li a.borrowaudit{
+	background: url(../images/jksh.png) no-repeat;
+	background-position: 32px center;
+}
+
+.navs ul li a.productcenter{
+	background: url(../images/cpzx.png) no-repeat;
+	background-position: 32px center;
+}
+
+.navs ul li a.studentdeal{
+	background: url(../images/xsjyjl.png) no-repeat;
+	background-position: 32px center;
+}
+
+.navs ul li a.lendermanager{
+	background: url(../images/tzrgl.png) no-repeat;
+	background-position: 32px center;
+}
+
+.navs ul li a.adminmanager{
+	background: url(../images/ptgl.png) no-repeat;
+	background-position: 32px center;
+}
+

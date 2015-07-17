@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudentAccountFlowMapper">
+    <resultMap type="StudentAccountFlowDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="student_name" property="studentName"/>
+        <result column="student_phone" property="studentPhone"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="current_stage" property="currentStage"/>
+        <result column="total_stage" property="totalStage"/>
+        <result column="deadline" property="deadline"/>
+        <result column="order_id" property="orderId"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="balance_before" property="balanceBefore"/>
+        <result column="balance_after" property="balanceAfter"/>
+        <result column="fee" property="fee"/>
+        <result column="recharge" property="recharge"/>
+        <result column="bidding_id" property="biddingId"/>
+        <result column="bill_stage_id" property="billStageId"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="check_times" property="checkTimes"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,student_id,student_name,student_phone,organization_name,current_stage,total_stage,deadline,`type`,order_id,amount,fee,recharge,balance_before,balance_after,description,bidding_id,bill_stage_id,status,check_times,created,modified
+    </sql>
+
+    <insert id="insert" parameterType="StudentAccountFlowDO">
+        insert into xhd_student_account_flow(student_id,student_name,student_phone,organization_name,current_stage,total_stage,deadline,order_id,`type`,status,amount,fee,recharge,balance_before,balance_after,bidding_id,bill_stage_id,description,check_times,created,modified)
+        values(#{studentId},#{studentName},#{studentPhone},#{organizationName},#{currentStage},#{totalStage},#{deadline},#{orderId},#{type},#{status},#{amount},#{fee},#{recharge},#{balanceBefore},#{balanceAfter},#{biddingId},#{billStageId},#{description},#{checkTimes},NOW(),NOW())
+    </insert>
+
+    <select id="getById" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_student_account_flow WHERE id = #{value} limit 1
+    </select>
+
+    <select id="getByOrderId" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_student_account_flow WHERE order_id = #{value} limit 1
+    </select>
+
+    <update id="update">
+        update xhd_student_account_flow
+        set balance_before = #{balanceBefore},
+        balance_after = #{balanceAfter},
+        bidding_id = #{biddingId},
+        bill_stage_id = #{billStageId},
+        description = #{description},
+        status = #{status},
+        check_times = #{checkTimes},
+        modified = NOW()
+        where id = #{id} AND student_id = #{studentId}
+    </update>
+
+    <sql id="query">
+        <if test="studentId != null">
+            and student_id = #{studentId}
+        </if>
+        <if test="type != -1">
+            and type = #{type}
+        </if>
+        <if test="beginDate != null and endDate != null">
+            and `created` BETWEEN #{beginDate} AND #{endDate}
+        </if>
+        <if test="studentName != null">
+            and student_name = #{studentName}
+        </if>
+        <if test="studentPhone != null">
+            and student_phone = #{studentPhone}
+        </if>
+        <if test="organizationName != null">
+            and organization_name = #{organizationName}
+        </if>
+    </sql>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_student_account_flow where 1=1
+        <include refid="query"/>
+    </select>
+
+    <select id="query" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_account_flow
+        where 1=1 <include refid="query"/>
+        order by `created` DESC limit #{startRow},#{pageSize}
+    </select>
+
+    <select id="getByStatus" resultMap="defaultMap">
+        SELECT <include refid="all"/> FROM xhd_student_account_flow
+        WHERE status = #{status}
+        AND `type` = #{type} limit 20
+    </select>
+
+</mapper>

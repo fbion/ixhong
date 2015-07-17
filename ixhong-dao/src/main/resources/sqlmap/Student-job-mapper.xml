@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudentJobMapper">
+    <resultMap type="StudentJobDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="status" property="status"/>
+        <result column="company" property="company"/>
+        <result column="department" property="department"/>
+        <result column="title" property="title"/>
+        <result column="begin_date" property="beginDate"/>
+        <result column="certifier" property="certifier"/>
+        <result column="certifier_title" property="certifierTitle"/>
+        <result column="certifier_phone" property="certifierPhone"/>
+        <result column="certificate_image" property="certificateImage"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,student_id,`status`,company,department,title,begin_date,certifier,certifier_title,certifier_phone,certificate_image,created,modified
+	</sql>
+
+    <insert id="insert" parameterType="StudentJobDO">
+        insert xhd_student_job(student_id,`status`,company,department,title,begin_date,certifier,certifier_title,certifier_phone,certificate_image,created,modified)
+        values(#{studentId},#{status},#{company},#{department},#{title},#{beginDate},#{certifier},#{certifierTitle},#{certifierPhone},#{certificateImage},NOW(),NOW())
+    </insert>
+
+    <select id="getByStudentId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_student_job where student_id = #{value}  limit 1
+    </select>
+
+    <update id="update" parameterType="StudentJobDO">
+        update xhd_student_job
+        set student_id = #{studentId},
+        `status` = #{status},
+        company = #{company},
+        department = #{department},
+        title = #{title},
+        certifier = #{certifier},
+        begin_date = #{beginDate},
+        certifier_title = #{certifierTitle},
+        certifier_phone = #{certifierPhone},
+        certificate_image = #{certificateImage},
+        modified = NOW()
+        where student_id=#{studentId}
+    </update>
+</mapper>

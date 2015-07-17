@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="YibaoCityMapper">
+       <resultMap type="YibaoCityDO" id="defaultMap">
+              <id column="id" property="id"/>
+              <result column="code" property="code"/>
+              <result column="pid" property="pid"/>
+              <result column="name" property="name"/>
+       </resultMap>
+
+       <sql id="all">
+              id,code,pid,name
+       </sql>
+       <select id="getByPid" resultMap="defaultMap">
+              select <include refid="all"/> from xhd_yibao_city where pid = #{value}
+       </select>
+
+
+</mapper>

@@ -1,0 +1,77 @@
+#set($title = "友情链接")
+<div class="content">
+    <div class="titles">
+        <p>平台管理 ><span>友情链接</span></p>
+    </div>
+    <div class="course">
+        <form id="linkForm" name="linkForm">
+            <input type="hidden" name="id" id="linkId" value="$!{link.id}"/>
+            <input type="hidden" name="token" value="$!{token}"/>
+            <table class="table2">
+                <tr>
+                    <td>链接名称：  </td>
+                    <td style="white-space:nowrap;">
+                        <input type="text" name="name" maxlength="60" id="name" autocomplete="off" value="$!{link.name}" class="w150 numheight"  style="width:300px!important;margin-right: 10px;">
+                        <span class="msg_box warning"><font></font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>链接地址：  </td>
+                    <td style="white-space:nowrap;">
+                        <input type="text" name="link" maxlength="120" id="link" autocomplete="off" value="$!{link.link}" class="w150 numheight" style="width:300px!important;margin-right: 5px;">
+                        <span class="msg_box warning"><font></font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><span id="error" style="color: red"></span></td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td style="float: left;margin-left:30px;white-space: nowrap;">
+                        <input type="button" name="confirm" id="confirm" value="提交" style="cursor:pointer;background: #1abc9c;padding: 9px 26px;color: #fff;margin: 0px auto;"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" name="back" id="back" value="返回" onclick="javascript:history.back(-1)" style="cursor:pointer;background: #1abc9c;padding: 9px 26px;color: #fff;margin: 20px auto;"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#confirm").click(function() {
+        if ($("#name").val() == ""){
+            $("#error").html("链接名称不能为空！");
+            return false;
+        }
+        if ($("#link").val() == ""){
+            $("#error").html("链接地址不能为空！");
+            return false;
+        }
+        $("#error").html("");
+        var url = '/links/add_action.jhtml';
+        if($("#linkId").val() != ""){
+            url = '/links/update_action.jhtml';
+        }
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:$('#linkForm').serialize(),
+            dataType:'json',
+            success:function(data) {
+                if (data.code == 'S00000') {
+                    window.location.href="/links/list.jhtml";
+                } else {
+                    $("#error").html(data.message);
+                }
+            },
+            error:function(data) {
+                alert(JSON.stringify(data));
+            }
+        });
+    })
+</script>
+
+
+

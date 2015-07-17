@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrganizationMiscMapper">
+    <resultMap type="OrganizationMiscDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="total_staffs" property="totalStaffs"/>
+        <result column="total_teachers" property="totalTeachers"/>
+        <result column="last_year_students" property="lastYearStudents"/>
+        <result column="this_year_students" property="thisYearStudents"/>
+        <result column="address" property="address"/>
+        <result column="acreage" property="acreage"/>
+        <result column="total_classrooms" property="totalClassrooms"/>
+        <result column="property_type" property="propertyType"/>
+        <result column="devices" property="devices"/>
+        <result column="devices_value" property="devicesValue"/>
+        <result column="house_property_image" property="housePropertyImage"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+        id,organization_id,total_staffs,total_teachers,last_year_students,this_year_students,address,acreage,total_classrooms,
+        property_type,devices,devices_value,house_property_image,created,modified
+    </sql>
+
+    <select id="insert" parameterType="OrganizationMiscDO">
+        insert into xhd_organization_misc(organization_id,total_staffs,total_teachers,last_year_students,this_year_students,address,acreage,total_classrooms,
+        property_type,devices,devices_value,house_property_image,created,modified)
+        values(#{organizationId},#{totalStaffs},#{totalTeachers},#{lastYearStudents},#{thisYearStudents},#{address},#{acreage},#{totalClassrooms},#{propertyType},
+        #{devices},#{devicesValue},#{housePropertyImage},NOW(),NOW())
+    </select>
+
+    <select id="getByOrganizationId" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_organization_misc where organization_id = #{value} limit 1
+    </select>
+
+    <update id="update" parameterType="OrganizationMiscDO">
+        update xhd_organization_misc SET
+        total_staffs = #{totalStaffs},
+        total_teachers = #{totalTeachers},
+        last_year_students = #{lastYearStudents},
+        this_year_students = #{thisYearStudents},
+        address = #{address},
+        acreage = #{acreage},
+        total_classrooms = #{totalClassrooms},
+        property_type = #{propertyType},
+        devices = #{devices},
+        devices_value = #{devicesValue},
+        house_property_image = #{housePropertyImage},
+        modified = NOW()
+        where organization_id = #{organizationId}
+    </update>
+
+</mapper>

@@ -1,0 +1,57 @@
+#set($title = "学生还款计划")
+<body>
+<div class="content">
+    <div class="titles">
+        <p>平台管理><span>最新公告></span><span>公告列表</span></p>
+        </p>
+    </div>
+    <div class="querybox">
+        <form id="getList" action="/article/notice_list.jhtml" method="post">
+            <label>标题</label>
+            <input type="text" class="classname" name="title" value="$!{query.title}" id="title" />
+            <input type="submit" class="jgbut" id="jgbut" value="搜索" style="cursor: pointer;"/>
+        </form>
+    </div>
+    <div class="agree">
+        <input type="button" onclick="javascript:addNotice()" class="nobut" id="nobut" value="添加最新公告" style="cursor: pointer;width:100px;" />
+    </div>
+    <table class="table1">
+        <tr class="headline">
+            <td>标题</td>
+            <td>是否生效</td>
+            <td>添加时间</td>
+            <td>操作</td>
+        </tr>
+        #foreach($article in $articles)
+            <tr>
+                <td>$!article.title</td>
+                <td>
+                    #if($!article.status == 1)
+                       有效
+                    #else
+                       无效
+                    #end
+                </td>
+                <td>$!dateFormatUtils.format($!article.created,'yyyy-MM-dd HH:mm:ss')</td>
+                <td>
+                    #if($!article.status == 1)
+                        <a href="javascript:confirm('您确定要停用该文章吗？','/article/update_status_action.jhtml?status=0&id=$article.id&type=1')" >停用</a>
+                    #else
+                        <a href="javascript:confirm('您确定要启用该文章吗？','/article/update_status_action.jhtml?status=1&id=$article.id&type=1')" >启用</a>
+                    #end
+                    <a href="/article/notice_detail.jhtml?id=$!article.id">编辑</a>
+                    <a href="javascript:confirm('您确定要删除该文章吗？','/article/delete_action.jhtml?id=$!article.id&type=1')">删除</a>
+                </td>
+            </tr>
+        #end
+    </table>
+    #pagination("/article/notice_list.jhtml?$!{query.queryString()}" $!queryResult)
+</div>
+
+<script>
+    function addNotice(){
+        window.location.href="/article/add_notice.jhtml";
+    }
+</script>
+
+</body>

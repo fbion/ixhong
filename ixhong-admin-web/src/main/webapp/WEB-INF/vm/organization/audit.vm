@@ -1,0 +1,458 @@
+#set($title = "机构审核")
+
+<a name="top"></a>
+<p id="back-to-top"><a href="#top"><span></span>返回顶部</a></p>
+<div class="content">
+    <div class="titles">
+        <p><span>机构审核</span></p>
+    </div>
+    <div class="course">
+        <form name="auditForm" id="auditForm" action="/organization/audit_action.jhtml" method="post">
+            <input type="hidden" name="token" value="$!{token}">
+            <input type="hidden" name="organization_id" value="$!{organizationId}">
+            <input type="hidden" id="audited_failed" name="audited_failed" value="$!{auditedFailed}">
+            <input type="hidden" id="bail_percentage" name="bail_percentage" value="">
+
+            <input type="hidden" id="status" value="$!{status}">
+            <input type="hidden" id="name" value="$!{name}">
+            <input type="hidden" id="email" value="$!{email}">
+            <input type="hidden" id="code" value="$!{code}">
+            <input type="hidden" id="page" value="$!{page}">
+
+            <table class="table2">
+                <tr>
+                    <td>审核结果</td>
+                    <td>
+                        <input type="radio" name="status" value="$!{auditedSuccess}" checked="checked" onclick="show(this)">&nbsp;通过&nbsp;&nbsp;
+                        <input type="radio" name="status" value="$!{auditedFailed}" onclick="show(this)">&nbsp;不通过<br>
+                    </td>
+                </tr>
+                <tr id="tr_code"><td valign="top">学校编号</td><td><input type="text" id="_code" name="code" class="w150 numheight"></td></tr>
+                <tr id="tr_bail1"><td valign="top">保证金比例(本科及以上)</td><td><input type="text" id="undergraduate" name="undergraduate" class="w150 numheight"><span>   %</span></td></td></tr>
+                <tr id="tr_bail2"><td valign="top">保证金比例(大专学历)</td><td><input type="text" id="junior" name="junior" class="w150 numheight"><span>   %</span></td></td></tr>
+                <tr id="tr_bail3"><td valign="top">保证金比例(大专以下)</td><td><input type="text" id="junior_lower" name="junior_lower" class="w150 numheight"><span>   %</span></td></td></tr>
+                <tr id="tr_level"><td valign="top">机构类别</td><td>
+                    #foreach($e in $!levelEnums)
+                        <input type="radio" name="level" value="$!e.code" #if($!e.code == $!firstLevel) checked
+                        #end>&nbsp;$e.meaning &nbsp;&nbsp;&nbsp;
+                    #end
+                </td></tr>
+                <tr id="tr_type"><td valign="top">复检频率</td><td>
+                    #foreach($e in $!checkTypeEnums)
+                        <input type="radio" name="check_type" value="$!e.code" #if($!e.code == $!quarterCheck) checked
+                        #end>&nbsp;$e.meaning &nbsp;&nbsp;&nbsp;
+                    #end
+                </td></tr>
+                <tr id="tr_quotas"><td valign="top">额度限制</td><td><input type="text" id="lending_quotas" name="lending_quotas" class="w150 numheight"><span>   万元</span></td></td></tr>
+                <tr><td valign="top">审核留言</td><td><textarea id="audit_note" name="audit_note" class="course_text"></textarea>         </td></tr>
+                <tr><td></td><td><input type="button" id="btn_sub" name="course_firm" value="提交审核结论" class="course_but course_butwidth">
+                    <input type="button" name="course_quit" id="course_quit" value="返回" class="course_but" onclick="history.go(-1)"></td></tr>
+            </table>
+        </form>
+
+        <div class="showinformation">
+            <div class="titletop">注册邮箱: $!organization.email</div>
+        </div>
+        <div class="showinformation">
+            <div class="titletop">主要人员信息</div>
+            <div class="informationlist">
+                <div class="h40"><em>法人代表</em></div>
+                <table class="table2 tb">
+                    <tr>
+                        <td valign="top">姓名:</td>
+                        <td>$!member.corporation</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">身份证:</td>
+                        <td>$!member.cardId</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">手机号:</td>
+                        <td>$!member.phone</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">学历、工作经历简述:</td>
+                        <td>$!member.description</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">身份证正面:</td>
+                        <td><a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${member.cardFrontImage}" id=""><img src="http://${imgHost}/ds/x2/${member.cardFrontImage}" /></a></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">身份证反面:</td>
+                        <td><a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${member.cardBackImage}" id=""><img src="http://${imgHost}/ds/x2/${member.cardBackImage}" /></a></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">查询授权书扫描件:</td>
+                        <td><a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${member.authorizationImage}" id=""><img src="http://${imgHost}/ds/x2/${member.authorizationImage}" /></a></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">征信报告:</td>
+                        <td>
+                            #if(${member.creditImage})
+                                <a target="_blank" href="http://${imgHost}/ds/${member.creditImage}" id="" style="color:chartreuse;">下载预览</a>
+                            #else
+                                无
+                            #end
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="informationlist">
+                <div class="h40"><em>联系人</em></div>
+                <table class="table2 tb">
+                    <tr>
+                        <td valign="top">姓名:</td>
+                        <td>$!member.contact</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">身份证:</td>
+                        <td>$!member.contactCardId</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">职位:</td>
+                        <td>$!member.contactTitle</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">手机号:</td>
+                        <td>$!member.contactPhone</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="informationlist">
+                <div class="h40"><em>股东信息</em></div>
+                <center>
+                    <table class="table3 tb" id="shareholders_tab">
+                        <tr>
+                            <td>股东姓名</td>
+                            <td>出资额（万元）</td>
+                            <td>出资比例（%）</td>
+                            <td>联系手机</td>
+                        </tr>
+                    </table>
+                </center>
+            </div>
+            <div class="informationlist">
+                <div class="h40"><em>高管信息</em></div>
+                <center>
+                    <table class="table3 tb" id="managers_tab">
+                        <tr>
+                            <td>高管姓名</td>
+                            <td>职务</td>
+                            <td>联系手机</td>
+                        </tr>
+                    </table>
+                </center>
+            </div>
+        </div>
+        <div class="showinformation">
+            <div class="titletop">机构注册信息</div>
+            <div class="informationlist">
+                <table class="table2 tb">
+                    <tr>
+                        <td valign="top">机构开办形式:</td>
+                        <td>
+                            #foreach($e in $foundTypeEnums)
+								#if($e.code == $registration.foundType)
+                                $e.meaning
+                            #end
+							#end
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">公司/民办非企业单位名称:</td>
+                        <td>$!registration.unionName</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">注册地址:</td>
+                        <td>$!{registrationProvince}省$!{registrationCity}市$!{specificAddress}</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">全国连锁:</td>
+                        <td>
+                            #if($isChain == 1)
+                                是
+                            #else
+                                否
+                            #end
+                        </td>
+                    </tr>
+                    #if ($isChain == 1)
+                        <tr>
+                            <td valign="top">全国分校数量:</td>
+                            <td>$!branchAmount</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">与总部关系:</td>
+                            <td>$!chainType</td>
+                        </tr>
+                    #end
+                    <tr>
+                        <td valign="top">登记机关/办学许可机关:</td>
+                        <td>$!registration.licenseOffice</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">成立时间:</td>
+                        <td>$!registration.foundDate</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">机构固定电话:</td>
+                        <td>$!registration.telephone</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">网址:</td>
+                        <td>$!registration.website</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">大事记:</td>
+                        <td>$!registration.description</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">营业执照副本/办学许可证:</td>
+                        <td><a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${registration.licenseImage}" id=""><img src="http://${imgHost}/ds/x2/${registration.licenseImage}" /></a></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">组织机构代码证:</td>
+                        <td><a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${registration.codeImage}" id=""><img src="http://${imgHost}/ds/x2/${registration.codeImage}" /></a></td>
+                    </tr>
+                    <tr>
+                        <td valign="top">税务登记证:</td>
+                        <td><a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${registration.taxImage}" id=""><img src="http://${imgHost}/ds/x2/${registration.taxImage}" /></a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="showinformation">
+            <div class="titletop">学校信息</div>
+            <div class="informationlist">
+                <table class="table2 tb" >
+                    <tr>
+                        <td valign="top">员工数量:</td>
+                        <td>$!misc.totalStaffs</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">专职教师数量:</td>
+                        <td>$!misc.totalTeachers</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">上一年招生总数量:</td>
+                        <td>$!misc.lastYearStudents</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">本年度截至目前招生总数量:</td>
+                        <td>$!misc.thisYearStudents</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">教学地址:</td>
+                        <td>$!misc.address</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">场地总面积:</td>
+                        <td>$!{misc.acreage}平方米</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">教室数量:</td>
+                        <td>$!misc.totalClassrooms</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">场地所有权信息:</td>
+                        <td>
+                            #foreach($e in $propertyTypeEnums)
+								#if($e.code == $misc.propertyType)
+                                $e.meaning
+                            #end
+							#end
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">主要教学设备:</td>
+                        <td>$!misc.devices</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">主要教学设备投入金额:</td>
+                        <td>$!{misc.devicesValue}万元</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">房产证/租房合同:</td>
+                        <td><a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${misc.housePropertyImage}" id=""><img src="http://${imgHost}/ds/x2/${misc.housePropertyImage}" /></a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="showinformation">
+            <div class="titletop">银行帐号信息(<a href="/organization/update_account.jhtml?organization_id=$!organization.id&bank_name=$!account.bankName&bank_branch=$!account.bankBranch&name=$!account.name">修改</a>)</div>
+            <div class="informationlist">
+                <table class="table2 tb">
+                    <tr>
+                        <td valign="top">银行名称:</td>
+                        <td>$!account.bankName</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">开户地:</td>
+                        <td>$!{bankProvince}省$!{bankCity}市</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">开户支行名称:</td>
+                        <td>$!account.bankBranch</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">对公帐户名称:</td>
+                        <td>$!account.name</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">帐号:</td>
+                        <td>$!account.accountNumber</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">银行开户许可证:</td>
+                        <td>
+                            <a class="imgbox" target="_blank" href="http://${imgHost}/ds/xm/${account.licenseImage}" id=""><img src="http://${imgHost}/ds/x2/${account.licenseImage}" /></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script src="/js/organization.js"></script>
+<script>
+    $(function() {
+        if ($("input[name='status']:checked").val() == $('#audited_failed').val()) {
+            $('#tr_code').hide();
+            $('#tr_bail1').hide();
+            $('#tr_bail2').hide();
+            $('#tr_bail3').hide();
+            $('#tr_level').hide();
+            $('#tr_type').hide();
+            $('#tr_quotas').hide();
+            $('#code').attr("disabled", "disabled");
+            $('#bail_percent').attr("disabled", "disabled");
+            $('#check_type').attr("disabled", "disabled");
+            $('#lending_quotas').attr("disabled", "disabled");
+        } else {
+            $('#tr_code').show();
+            $('#tr_bail1').show();
+            $('#tr_bail2').show();
+            $('#tr_bail3').show();
+            $('#tr_level').show();
+            $('#tr_type').show();
+            $('#tr_quotas').show();
+            $('#code').removeAttr("disabled");
+            $('#bail_percent').removeAttr("disabled");
+            $('#check_type').removeAttr("disabled");
+            $('#lending_quotas').removeAttr("disabled");
+        }
+    });
+
+    function show(obj) {
+        if (obj.value == $('#audited_failed').val()) {
+            $('#tr_code').hide();
+            $('#tr_bail1').hide();
+            $('#tr_bail2').hide();
+            $('#tr_bail3').hide();
+            $('#tr_level').hide();
+            $('#tr_type').hide();
+            $('#tr_quotas').hide();
+            $('#code').attr("disabled", "disabled");
+            $('#bail_percent').attr("disabled", "disabled");
+            $('#check_type').attr("disabled", "disabled");
+            $('#lending_quotas').attr("disabled", "disabled");
+        } else {
+            $('#tr_code').show();
+            $('#tr_bail1').show();
+            $('#tr_bail2').show();
+            $('#tr_bail3').show();
+            $('#tr_level').show();
+            $('#tr_type').show();
+            $('#tr_quotas').show();
+            $('#code').removeAttr("disabled");
+            $('#bail_percent').removeAttr("disabled");
+            $('#check_type').removeAttr("disabled");
+            $('#lending_quotas').removeAttr("disabled");
+        }
+    }
+
+    $(function() {
+        $('#btn_sub').click(function() {
+            if ($("input:radio[name='status']:checked").val() != $('#audited_failed').val()) {
+                if (check_code('_code')&&check_bail_percent('undergraduate')
+                        &&check_bail_percent('junior')&&check_bail_percent('junior_lower')
+                    &&check_lending_quotas('lending_quotas')&&check_audit_note('audit_note')) {
+                    var bailPercentage = {
+                        "undergraduate":$('#undergraduate').val(),
+                        "junior":$('#junior').val(),
+                        "juniorLower":$('#junior_lower').val()
+                    };
+                    $('#bail_percentage').val(JSON.stringify(bailPercentage));
+                    $.ajax({
+                        type:"POST",
+                        url:"/organization/audit_action.jhtml",
+                        data:$('#auditForm').serialize(),
+                        async:false,
+                        dataType:"json",
+                        success:function(data) {
+                            if (data.code == 'S00000') {
+                                alert('提交成功');
+                                location.href = '/organization/list.jhtml?status=' + $('#status').val() + '&name=' + $('#name').val() + '&email=' + $('#email').val() + '&code=' + $('#code').val() + '&page=' + $('#page').val();
+                            } else {
+                                alert(data.message);
+                            }
+                        },
+                        error: function(request) {
+                            alert("Connection error");
+                        }
+                    });
+                }
+            } else {
+                if (check_audit_note('audit_note')) {
+                    $.ajax({
+                        type:"POST",
+                        url:"/organization/audit_action.jhtml",
+                        data:$('#auditForm').serialize(),
+                        async:false,
+                        dataType:"json",
+                        success:function(data) {
+                            if (data.code == 'S00000') {
+                                alert('提交成功');
+                                location.href = '/organization/list.jhtml?status=' + $('#status').val() + '&name=' + $('#name').val() + '&email=' + $('#email').val() + '&code=' + $('#code').val() + '&page=' + $('#page').val();
+                            } else {
+                                alert(data.message);
+                            }
+                        },
+                        error: function(request) {
+                            alert("网络异常，请稍后再试");
+                        }
+                    });
+                }
+            }
+
+        });
+
+        var _shareholders = $member.shareholders;
+        for (var idx in _shareholders) {
+            var sh = _shareholders[idx];
+            $("#shareholders_tab").append("<tr>"
+                    + "<td>" + sh.shareholderName + "</td>"
+                    + "<td>" + sh.investAmount + "</td>"
+                    + "<td>" + sh.investRate + "</td>"
+                    + "<td>" + sh.shareholderPhone + "</td>"
+                    + "</tr>"
+            );
+        }
+
+        var _managers = $member.managers;
+        for (var idx in _managers) {
+            var m = _managers[idx];
+            $("#managers_tab").append("<tr>"
+                    + "<td>" + m.managerName + "</td>"
+                    + "<td>" + m.managerTitle + "</td>"
+                    + "<td>" + m.managerPhone + "</td>"
+                    + "</tr>"
+            );
+        }
+
+    })
+</script>

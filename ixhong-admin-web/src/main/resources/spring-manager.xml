@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-autowire="byName">
+
+
+    <bean id="organizationManager" class="com.ixhong.manager.impl.OrganizationManagerImpl"/>
+    <bean id="teacherManager" class="com.ixhong.manager.impl.TeacherManagerImpl"/>
+    <bean id="adminManager" class="com.ixhong.manager.impl.AdminManagerImpl"/>
+	<bean id="courseManager" class="com.ixhong.manager.impl.CourseManagerImpl"/>
+	<bean id="organizationAccountManager" class="com.ixhong.manager.impl.OrganizationAccountManagerImpl"/>
+	<bean id="organizationMemberManager" class="com.ixhong.manager.impl.OrganizationMemberManagerImpl"/>
+	<bean id="organizationMiscManager" class="com.ixhong.manager.impl.OrganizationMiscManagerImpl"/>
+	<bean id="organizationRegistrationManager" class="com.ixhong.manager.impl.OrganizationRegistrationManagerImpl"/>
+	<bean id="organizationAccountFlowManager" class="com.ixhong.manager.impl.OrganizationAccountFlowManagerImpl"/>
+	<bean id="interestRateManager" class="com.ixhong.manager.impl.InterestRateManagerImpl"/>
+	<bean id="yibaoCityManager" class="com.ixhong.manager.impl.YibaoCityManagerImpl"/>
+	<bean id="studentManager" class="com.ixhong.manager.impl.StudentManagerImpl"/>
+	<bean id="studentBasicManagerImpl" class="com.ixhong.manager.impl.StudentBasicManagerImpl"/>
+	<bean id="studentEducationManagerImpl" class="com.ixhong.manager.impl.StudentEducationManagerImpl"/>
+	<bean id="studentJobManagerImpl" class="com.ixhong.manager.impl.StudentJobManagerImpl"/>
+	<bean id="studentRelativesManagerImpl" class="com.ixhong.manager.impl.StudentRelativesManagerImpl"/>
+	<bean id="studentUsageManagerImpl" class="com.ixhong.manager.impl.StudentUsageManagerImpl"/>
+	<bean id="studentBillStageManager" class="com.ixhong.manager.impl.StudentBillStageManagerImpl"/>
+	<bean id="bankManager" class="com.ixhong.manager.impl.BankManagerImpl"/>
+	<bean id="biddingManager" class="com.ixhong.manager.impl.BiddingManagerImpl"/>
+	<bean id="biddingItemManager" class="com.ixhong.manager.impl.BiddingItemManagerImpl"/>
+	<bean id="studentAccountManager" class="com.ixhong.manager.impl.StudentAccountManagerImpl"/>
+	<bean id="studentAccountFlowManager" class="com.ixhong.manager.impl.StudentAccountFlowManagerImpl"/>
+	<bean id="lenderAccountManager" class="com.ixhong.manager.impl.LenderAccountManagerImpl"/>
+	<bean id="lenderAccountFlowManager" class="com.ixhong.manager.impl.LenderAccountFlowManagerImpl"/>
+	<bean id="lenderManager" class="com.ixhong.manager.impl.LenderManagerImpl"/>
+	<bean id="lenderBillStageManager" class="com.ixhong.manager.impl.LenderBillStageManagerImpl" />
+	<bean id="accountFlowManager" class="com.ixhong.manager.impl.AccountFlowManagerImpl"/>
+	<bean id="organizationWithdrawManager" class="com.ixhong.manager.impl.OrganizationWithdrawManagerImpl"/>
+	<bean id="accountManager" class="com.ixhong.manager.impl.AccountManagerImpl"/>
+	<bean id="articleManager" class="com.ixhong.manager.impl.ArticleManagerImpl"/>
+	<bean id="linksManager" class="com.ixhong.manager.impl.LinksManagerImpl"/>
+</beans>

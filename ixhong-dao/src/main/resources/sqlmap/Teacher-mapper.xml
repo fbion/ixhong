@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TeacherMapper">
+    <resultMap type="TeacherDO" id="defaultMap">
+        <id column="id" property="id"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+    </resultMap>
+
+    <sql id="all">
+		id,organization_id,name,`password`,`status`,phone,created,modified
+	</sql>
+
+    <sql id="query">
+        <if test="name != null">
+            and name like BINARY concat('%', #{name},'%')
+        </if>
+        <if test="phone != null">
+            and phone like concat(#{phone} , '%')
+        </if>
+    </sql>
+
+    <select id="validate" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_teacher where phone = #{phone} and password = MD5(#{password}) limit 1
+    </select>
+
+    <select id="getByTelephone" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_teacher where phone = #{value} limit 1
+    </select>
+
+    <insert id="insert" parameterType="OrganizationDO">
+        insert into xhd_teacher(organization_id,name,password,phone,`status`,created,modified)
+        values(#{organizationId},#{name},MD5(#{password}),#{phone},#{status},NOW(),NOW())
+    </insert>
+
+    <delete id="delete">
+        delete from xhd_teacher where id = #{value}
+    </delete>
+
+    <select id="getById" resultMap="defaultMap">
+        select <include refid="all"/> from xhd_teacher where id = #{id} limit 1
+    </select>
+
+    <update id="updatePassword">
+        update xhd_teacher
+        set modified = NOW(),
+        password = MD5(#{password}),
+        status = #{status}
+        where id = #{id}
+    </update>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(id) from xhd_teacher where organization_id = #{organizationId}
+        <include refid="query"/>
+    </select>
+
+    <select id="query" resultMap="defaultMap">
+        SELECT <include refid="all"/> from xhd_teacher where organization_id = #{organizationId}
+        <include refid="query"/>
+        order by id DESC limit #{startRow},#{pageSize}
+    </select>
+
+</mapper>

@@ -1,0 +1,40 @@
+#set($title = "机构账户信息")
+
+<form id="account_form" action="" method="post">
+    <input type="hidden" name="token" value="$!token" />
+    <input type="hidden" name="organization_id" value="$!organizationId" />
+    <table>
+    <tr><td>银行名称：<br><br></td><td><input type="text" id="bank_name" name="bank_name" value="$!bankName" style="width:300px;"><br><br></td></tr>
+    <tr><td>支行名称（全称）：<br><br></td><td><input type="text" id="bank_branch" name="bank_branch" value="$!bankBranch" style="width:300px;"><br><br></td></tr>
+    <tr><td>开户名：<br><br></td><td><input type="text" id="name" name="name" value="$!name" style="width:300px;"><br><br></td></tr>
+    <tr><td></td><td><input type="button" id="query_btn" value="确 定"/></td></tr>
+    </table>
+
+</form>
+
+
+<br>
+<span id="result"></span>
+
+<script>
+    $(function() {
+        $('#query_btn').click(function() {
+            $.ajax({
+                url:'/organization/update_account_action.jhtml',
+                type:'post',
+                data:$('#account_form').serialize(),
+                dataType:'json',
+                success:function(data) {
+                    if (data.code == 'S00000') {
+                        alert('修改成功');
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error:function(data) {
+                    alert('error');
+                }
+            });
+        });
+    })
+</script>
