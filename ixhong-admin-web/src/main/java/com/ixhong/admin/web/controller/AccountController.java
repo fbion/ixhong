@@ -64,7 +64,7 @@ public class AccountController {
         mav.addObject("receiveFine", AdminFlowTypeEnum.RECEIVE_FINE);
         mav.addObject("receiveAfterAdvance", AdminFlowTypeEnum.RECEIVE_AFTER_ADVANCE);
 
-        //test merge
+        //
 
         return mav;
     }
