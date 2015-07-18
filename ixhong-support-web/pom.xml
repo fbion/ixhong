@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ixhong.support.web</artifactId>
+    <artifactId>ixhong-support-web</artifactId>
 
     <packaging>war</packaging>
     <name>ixhong-support-web</name>
