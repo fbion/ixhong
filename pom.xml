@@ -16,7 +16,7 @@
         <module>ixhong-manager</module>
         <module>ixhong-fs-web</module>
         <module>ixhong-support-web</module>
-        <module>ixhong-lender-web</module>
+        <module>ixhong-user-web</module>
         <module>ixhong-base</module>
     </modules>
 

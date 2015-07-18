@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ixhong-lender-web</artifactId>
+    <artifactId>ixhong-user-web</artifactId>
 
     <packaging>war</packaging>
-    <name>ixhong-lender-web</name>
+    <name>ixhong-user-web</name>
     <url>http://maven.apache.org</url>
     <!-- 依赖包 -->
     <dependencies>
