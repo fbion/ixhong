@@ -7,7 +7,7 @@ import java.nio.channels.*;
 public class CreateArrayBuffer
 {
   static public void main( String args[] ) throws Exception {
-    byte array[] = new byte[1024];
+    byte[] array = new byte[1024];
 
     ByteBuffer buffer = ByteBuffer.wrap( array );
 
