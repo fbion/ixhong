@@ -13,8 +13,7 @@ public class Singleton implements Serializable {
     private Singleton() {
         //避免反射机制,导致的多例问题,通过反射机制仍然可以对私有构造函数进行操作  ?
         if (instance != null) {
-            System.out.println("instance != null");
-            return;
+            throw new RuntimeException("instance != null");
         }
     }
 
