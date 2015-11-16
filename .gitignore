@@ -1,0 +1,14 @@
+*/src/main/webapp/WEB-INF/classes
+.project
+.classpath
+.my*
+*.MF
+*git*
+ixhong-*/.settings
+ixhong-*/target
+ixhong-*/bin
+.settings
+*.iws
+*.iml
+*.ipr
+.idea/* 
