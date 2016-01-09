@@ -11,4 +11,6 @@ ixhong-*/bin
 *.iws
 *.iml
 *.ipr
-.idea/* 
+.idea/*
+profile/production.properties
+profile/test.properties
